@@ -15,28 +15,42 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AttributeController = void 0;
 const common_1 = require("@nestjs/common");
 const permissions_decorator_1 = require("../common/decorators/permissions.decorator");
+const attribute_service_1 = require("./attribute.service");
 let AttributeController = class AttributeController {
-    findAll() { }
-    findOne(id) { }
-    create(body) { }
-    update(id, body) { }
-    remove(id) { }
-    updateValues(id, body) { }
+    constructor(attributeService) {
+        this.attributeService = attributeService;
+    }
+    findAll(query) {
+        return this.attributeService.findAll(query);
+    }
+    findOne(id) {
+        return this.attributeService.findOne(id);
+    }
+    create(body) {
+        return this.attributeService.create(body);
+    }
+    update(id, body) {
+        return this.attributeService.update(id, body);
+    }
+    remove(id) {
+        return this.attributeService.remove(id);
+    }
 };
 exports.AttributeController = AttributeController;
 __decorate([
     (0, common_1.Get)(),
     (0, permissions_decorator_1.Permissions)('attribute:read'),
+    __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], AttributeController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     (0, permissions_decorator_1.Permissions)('attribute:read'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], AttributeController.prototype, "findOne", null);
 __decorate([
@@ -50,30 +64,22 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id'),
     (0, permissions_decorator_1.Permissions)('attribute:update'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", void 0)
 ], AttributeController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     (0, permissions_decorator_1.Permissions)('attribute:delete'),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], AttributeController.prototype, "remove", null);
-__decorate([
-    (0, common_1.Patch)(':id/values'),
-    (0, permissions_decorator_1.Permissions)('attribute:update'),
-    __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", void 0)
-], AttributeController.prototype, "updateValues", null);
 exports.AttributeController = AttributeController = __decorate([
-    (0, common_1.Controller)('attribute')
+    (0, common_1.Controller)('attribute'),
+    __metadata("design:paramtypes", [attribute_service_1.AttributeService])
 ], AttributeController);
 //# sourceMappingURL=attribute.controller.js.map

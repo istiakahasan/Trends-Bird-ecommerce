@@ -91,11 +91,15 @@ exports.BrandScalarFieldEnum = {
 };
 exports.AttributeScalarFieldEnum = {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    slug: 'slug',
+    type: 'type'
 };
 exports.AttributeValueScalarFieldEnum = {
     id: 'id',
     value: 'value',
+    slug: 'slug',
+    reference: 'reference',
     attributeId: 'attributeId'
 };
 exports.ProductScalarFieldEnum = {

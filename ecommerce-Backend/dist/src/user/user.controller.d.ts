@@ -10,9 +10,9 @@ export declare class UserController {
             };
         } & {
             id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;
@@ -37,9 +37,9 @@ export declare class UserController {
             };
         } & {
             id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;
@@ -58,9 +58,9 @@ export declare class UserController {
             };
         } & {
             id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;
@@ -79,9 +79,9 @@ export declare class UserController {
             };
         } & {
             id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;

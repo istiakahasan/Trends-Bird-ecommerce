@@ -87,14 +87,18 @@ model Brand {
 model Attribute {
   id     Int              @id @default(autoincrement())
   name   String           @unique
+  slug   String           @unique
+  type   String           // e.g. "dropdown", "radio", "checkbox", "color", "image"
   values AttributeValue[]
 }
 
 model AttributeValue {
   id          Int              @id @default(autoincrement())
   value       String
+  slug        String           @unique
+  reference   String?          // e.g. hex code or media URL
   attributeId Int
-  attribute   Attribute        @relation(fields: [attributeId], references: [id])
+  attribute   Attribute        @relation(fields: [attributeId], references: [id], onDelete: Cascade)
   variants    ProductVariant[]
 }
 

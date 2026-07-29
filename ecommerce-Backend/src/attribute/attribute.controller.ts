@@ -1,31 +1,38 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, Query, ParseIntPipe } from '@nestjs/common';
 import { Permissions } from '../common/decorators/permissions.decorator';
+import { AttributeService } from './attribute.service';
 
 @Controller('attribute')
 export class AttributeController {
-  
+  constructor(private readonly attributeService: AttributeService) {}
+
   @Get()
   @Permissions('attribute:read')
-  findAll() {}
+  findAll(@Query() query: any) {
+    return this.attributeService.findAll(query);
+  }
 
   @Get(':id')
   @Permissions('attribute:read')
-  findOne(@Param('id') id: string) {}
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.attributeService.findOne(id);
+  }
 
   @Post()
   @Permissions('attribute:create')
-  create(@Body() body: any) {}
+  create(@Body() body: any) {
+    return this.attributeService.create(body);
+  }
 
   @Patch(':id')
   @Permissions('attribute:update')
-  update(@Param('id') id: string, @Body() body: any) {}
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+    return this.attributeService.update(id, body);
+  }
 
   @Delete(':id')
   @Permissions('attribute:delete')
-  remove(@Param('id') id: string) {}
-
-  // Nested Route: Attribute Values
-  @Patch(':id/values')
-  @Permissions('attribute:update')
-  updateValues(@Param('id') id: string, @Body() body: any) {}
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.attributeService.remove(id);
+  }
 }

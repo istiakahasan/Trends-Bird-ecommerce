@@ -5,22 +5,22 @@ export declare class UserService {
     create(body: any): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
+            id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;
             active: boolean;
             refreshToken: string | null;
+            roleId: number;
             createdAt: Date;
             updatedAt: Date;
-            id: number;
-            roleId: number;
         };
     }>;
     findAll(query: {
@@ -32,22 +32,22 @@ export declare class UserService {
     }): Promise<{
         data: ({
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
+            id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;
             active: boolean;
             refreshToken: string | null;
+            roleId: number;
             createdAt: Date;
             updatedAt: Date;
-            id: number;
-            roleId: number;
         })[];
         meta: {
             total: number;
@@ -59,43 +59,43 @@ export declare class UserService {
     findOne(id: number): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
+            id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;
             active: boolean;
             refreshToken: string | null;
+            roleId: number;
             createdAt: Date;
             updatedAt: Date;
-            id: number;
-            roleId: number;
         };
     }>;
     update(id: number, currentUserId: number, body: any): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
+            id: number;
+            name: string | null;
             email: string;
             password: string;
-            name: string | null;
             phone: string | null;
             gender: string | null;
             avatar: string | null;
             active: boolean;
             refreshToken: string | null;
+            roleId: number;
             createdAt: Date;
             updatedAt: Date;
-            id: number;
-            roleId: number;
         };
     }>;
     remove(id: number): Promise<{

@@ -85,11 +85,15 @@ export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof Br
 export declare const AttributeScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
+    readonly slug: "slug";
+    readonly type: "type";
 };
 export type AttributeScalarFieldEnum = (typeof AttributeScalarFieldEnum)[keyof typeof AttributeScalarFieldEnum];
 export declare const AttributeValueScalarFieldEnum: {
     readonly id: "id";
     readonly value: "value";
+    readonly slug: "slug";
+    readonly reference: "reference";
     readonly attributeId: "attributeId";
 };
 export type AttributeValueScalarFieldEnum = (typeof AttributeValueScalarFieldEnum)[keyof typeof AttributeValueScalarFieldEnum];

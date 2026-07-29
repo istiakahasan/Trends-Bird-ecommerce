@@ -17,14 +17,20 @@ export type AttributeSumAggregateOutputType = {
 export type AttributeMinAggregateOutputType = {
     id: number | null;
     name: string | null;
+    slug: string | null;
+    type: string | null;
 };
 export type AttributeMaxAggregateOutputType = {
     id: number | null;
     name: string | null;
+    slug: string | null;
+    type: string | null;
 };
 export type AttributeCountAggregateOutputType = {
     id: number;
     name: number;
+    slug: number;
+    type: number;
     _all: number;
 };
 export type AttributeAvgAggregateInputType = {
@@ -36,14 +42,20 @@ export type AttributeSumAggregateInputType = {
 export type AttributeMinAggregateInputType = {
     id?: true;
     name?: true;
+    slug?: true;
+    type?: true;
 };
 export type AttributeMaxAggregateInputType = {
     id?: true;
     name?: true;
+    slug?: true;
+    type?: true;
 };
 export type AttributeCountAggregateInputType = {
     id?: true;
     name?: true;
+    slug?: true;
+    type?: true;
     _all?: true;
 };
 export type AttributeAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -77,6 +89,8 @@ export type AttributeGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type AttributeGroupByOutputType = {
     id: number;
     name: string;
+    slug: string;
+    type: string;
     _count: AttributeCountAggregateOutputType | null;
     _avg: AttributeAvgAggregateOutputType | null;
     _sum: AttributeSumAggregateOutputType | null;
@@ -92,24 +106,32 @@ export type AttributeWhereInput = {
     NOT?: Prisma.AttributeWhereInput | Prisma.AttributeWhereInput[];
     id?: Prisma.IntFilter<"Attribute"> | number;
     name?: Prisma.StringFilter<"Attribute"> | string;
+    slug?: Prisma.StringFilter<"Attribute"> | string;
+    type?: Prisma.StringFilter<"Attribute"> | string;
     values?: Prisma.AttributeValueListRelationFilter;
 };
 export type AttributeOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
     values?: Prisma.AttributeValueOrderByRelationAggregateInput;
 };
 export type AttributeWhereUniqueInput = Prisma.AtLeast<{
     id?: number;
     name?: string;
+    slug?: string;
     AND?: Prisma.AttributeWhereInput | Prisma.AttributeWhereInput[];
     OR?: Prisma.AttributeWhereInput[];
     NOT?: Prisma.AttributeWhereInput | Prisma.AttributeWhereInput[];
+    type?: Prisma.StringFilter<"Attribute"> | string;
     values?: Prisma.AttributeValueListRelationFilter;
-}, "id" | "name">;
+}, "id" | "name" | "slug">;
 export type AttributeOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
     _count?: Prisma.AttributeCountOrderByAggregateInput;
     _avg?: Prisma.AttributeAvgOrderByAggregateInput;
     _max?: Prisma.AttributeMaxOrderByAggregateInput;
@@ -122,39 +144,57 @@ export type AttributeScalarWhereWithAggregatesInput = {
     NOT?: Prisma.AttributeScalarWhereWithAggregatesInput | Prisma.AttributeScalarWhereWithAggregatesInput[];
     id?: Prisma.IntWithAggregatesFilter<"Attribute"> | number;
     name?: Prisma.StringWithAggregatesFilter<"Attribute"> | string;
+    slug?: Prisma.StringWithAggregatesFilter<"Attribute"> | string;
+    type?: Prisma.StringWithAggregatesFilter<"Attribute"> | string;
 };
 export type AttributeCreateInput = {
     name: string;
+    slug: string;
+    type: string;
     values?: Prisma.AttributeValueCreateNestedManyWithoutAttributeInput;
 };
 export type AttributeUncheckedCreateInput = {
     id?: number;
     name: string;
+    slug: string;
+    type: string;
     values?: Prisma.AttributeValueUncheckedCreateNestedManyWithoutAttributeInput;
 };
 export type AttributeUpdateInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.StringFieldUpdateOperationsInput | string;
     values?: Prisma.AttributeValueUpdateManyWithoutAttributeNestedInput;
 };
 export type AttributeUncheckedUpdateInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.StringFieldUpdateOperationsInput | string;
     values?: Prisma.AttributeValueUncheckedUpdateManyWithoutAttributeNestedInput;
 };
 export type AttributeCreateManyInput = {
     id?: number;
     name: string;
+    slug: string;
+    type: string;
 };
 export type AttributeUpdateManyMutationInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type AttributeUncheckedUpdateManyInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type AttributeCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
 };
 export type AttributeAvgOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -162,10 +202,14 @@ export type AttributeAvgOrderByAggregateInput = {
 export type AttributeMaxOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
 };
 export type AttributeMinOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     name?: Prisma.SortOrder;
+    slug?: Prisma.SortOrder;
+    type?: Prisma.SortOrder;
 };
 export type AttributeSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
@@ -188,10 +232,14 @@ export type AttributeUpdateOneRequiredWithoutValuesNestedInput = {
 };
 export type AttributeCreateWithoutValuesInput = {
     name: string;
+    slug: string;
+    type: string;
 };
 export type AttributeUncheckedCreateWithoutValuesInput = {
     id?: number;
     name: string;
+    slug: string;
+    type: string;
 };
 export type AttributeCreateOrConnectWithoutValuesInput = {
     where: Prisma.AttributeWhereUniqueInput;
@@ -208,10 +256,14 @@ export type AttributeUpdateToOneWithWhereWithoutValuesInput = {
 };
 export type AttributeUpdateWithoutValuesInput = {
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type AttributeUncheckedUpdateWithoutValuesInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
     name?: Prisma.StringFieldUpdateOperationsInput | string;
+    slug?: Prisma.StringFieldUpdateOperationsInput | string;
+    type?: Prisma.StringFieldUpdateOperationsInput | string;
 };
 export type AttributeCountOutputType = {
     values: number;
@@ -228,22 +280,30 @@ export type AttributeCountOutputTypeCountValuesArgs<ExtArgs extends runtime.Type
 export type AttributeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
+    slug?: boolean;
+    type?: boolean;
     values?: boolean | Prisma.Attribute$valuesArgs<ExtArgs>;
     _count?: boolean | Prisma.AttributeCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["attribute"]>;
 export type AttributeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
+    slug?: boolean;
+    type?: boolean;
 }, ExtArgs["result"]["attribute"]>;
 export type AttributeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
     name?: boolean;
+    slug?: boolean;
+    type?: boolean;
 }, ExtArgs["result"]["attribute"]>;
 export type AttributeSelectScalar = {
     id?: boolean;
     name?: boolean;
+    slug?: boolean;
+    type?: boolean;
 };
-export type AttributeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name", ExtArgs["result"]["attribute"]>;
+export type AttributeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "slug" | "type", ExtArgs["result"]["attribute"]>;
 export type AttributeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     values?: boolean | Prisma.Attribute$valuesArgs<ExtArgs>;
     _count?: boolean | Prisma.AttributeCountOutputTypeDefaultArgs<ExtArgs>;
@@ -258,6 +318,8 @@ export type $AttributePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: number;
         name: string;
+        slug: string;
+        type: string;
     }, ExtArgs["result"]["attribute"]>;
     composites: {};
 };
@@ -318,6 +380,8 @@ export interface Prisma__AttributeClient<T, Null = never, ExtArgs extends runtim
 export interface AttributeFieldRefs {
     readonly id: Prisma.FieldRef<"Attribute", 'Int'>;
     readonly name: Prisma.FieldRef<"Attribute", 'String'>;
+    readonly slug: Prisma.FieldRef<"Attribute", 'String'>;
+    readonly type: Prisma.FieldRef<"Attribute", 'String'>;
 }
 export type AttributeFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.AttributeSelect<ExtArgs> | null;
