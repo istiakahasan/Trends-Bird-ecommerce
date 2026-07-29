@@ -274,17 +274,6 @@ Authorization: Bearer <access_token>
 
 ---
 
-# ⚠️ Known Issues
-
-- Payment gateway integration is not yet implemented.
-- Email verification is not yet available.
-- Password reset functionality is pending.
-- Some frontend pages are still under development.
-- Automated testing has not yet been added.
-
----
-
-
 
 # 🤝 Contributing
 
