@@ -8,6 +8,7 @@ import { SearchFilterBar } from '../../components/common/SearchFilterBar';
 import { PermissionGuard } from '../../components/PermissionGuard';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
+import { Avatar, AvatarImage, AvatarFallback } from '../../components/ui/avatar';
 import { toast } from 'sonner';
 import { Eye, Edit, Trash2, UserCheck, UserX } from 'lucide-react';
 import {
@@ -24,16 +25,17 @@ import {
 export const UserList = () => {
   const { hasPermission } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
+  const [roles, setRoles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0 });
   const [search, setSearch] = useState('');
-  const [filters, setFilters] = useState({ role: '', status: '' });
+  const [filters, setFilters] = useState({ roleId: '', active: '' });
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/users', {
+      const res = await api.get('/user', {
         params: { 
           page: pagination.page, 
           limit: pagination.limit, 
@@ -41,8 +43,8 @@ export const UserList = () => {
           ...filters,
         },
       });
-      setUsers(res.data.data.items);
-      setPagination({ ...pagination, total: res.data.data.total });
+      setUsers(res.data.data);
+      setPagination({ ...pagination, total: res.data.meta.total });
     } catch (error) {
       toast.error('Failed to fetch users');
     } finally {
@@ -51,13 +53,17 @@ export const UserList = () => {
   };
 
   useEffect(() => {
+    api.get('/roles?limit=100').then((res) => setRoles(res.data.data.items || res.data.data || []));
+  }, []);
+
+  useEffect(() => {
     fetchUsers();
   }, [pagination.page, search, filters]);
 
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(`/users/${deleteId}`);
+      await api.delete(`/user/${deleteId}`);
       toast.success('User deleted successfully');
       fetchUsers();
     } catch (error) {
@@ -69,7 +75,7 @@ export const UserList = () => {
 
   const handleToggleStatus = async (id: string, currentStatus: boolean) => {
     try {
-      await api.patch(`/users/${id}`, { active: !currentStatus });
+      await api.patch(`/user/${id}`, { active: !currentStatus });
       toast.success(`User ${currentStatus ? 'deactivated' : 'activated'} successfully`);
       fetchUsers();
     } catch (error) {
@@ -78,6 +84,16 @@ export const UserList = () => {
   };
 
   const columns = [
+    {
+      key: 'avatar',
+      header: 'Avatar',
+      render: (user: any) => (
+        <Avatar className="h-8 w-8">
+          <AvatarImage src={user.avatar} />
+          <AvatarFallback>{user.name?.charAt(0).toUpperCase()}</AvatarFallback>
+        </Avatar>
+      )
+    },
     { key: 'name', header: 'Name', className: 'font-medium' },
     { key: 'email', header: 'Email' },
     {
@@ -163,15 +179,12 @@ export const UserList = () => {
         onSearch={setSearch}
         filters={[
           {
-            key: 'role',
+            key: 'roleId',
             label: 'Role',
-            options: [
-              { value: 'super-admin', label: 'Super Admin' },
-              { value: 'catalog-manager', label: 'Catalog Manager' },
-            ],
+            options: roles.map(r => ({ value: r.id.toString(), label: r.name })),
           },
           {
-            key: 'status',
+            key: 'active',
             label: 'Status',
             options: [
               { value: 'true', label: 'Active' },
@@ -182,7 +195,7 @@ export const UserList = () => {
         onFilterChange={(key, value) => setFilters({ ...filters, [key]: value === 'all' ? '' : value })}
         onClear={() => {
           setSearch('');
-          setFilters({ role: '', status: '' });
+          setFilters({ roleId: '', active: '' });
         }}
       />
 

@@ -25,6 +25,7 @@ import { Card, CardContent } from '../../components/ui/card';
 import { Switch } from '../../components/ui/switch';
 import { toast } from 'sonner';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -32,6 +33,7 @@ const userSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters').optional(),
   phone: z.string().optional(),
   gender: z.string().optional(),
+  avatar: z.string().optional(),
   roleId: z.string().min(1, 'Role is required'),
   active: z.boolean().default(true),
 });
@@ -41,9 +43,11 @@ type UserFormValues = z.infer<typeof userSchema>;
 export const UserForm = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
   const isEditing = !!id;
+  const isEditingSelf = isEditing && currentUser?.id === parseInt(id || '0', 10);
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userSchema) as any,
@@ -52,7 +56,9 @@ export const UserForm = () => {
       email: '',
       phone: '',
       gender: '',
+      avatar: '',
       active: true,
+      roleId: '',
     },
   });
 
@@ -61,18 +67,20 @@ export const UserForm = () => {
       try {
         const [rolesRes] = await Promise.all([
           api.get('/roles?limit=100'),
-          isEditing ? api.get(`/users/${id}`) : null,
+          isEditing ? api.get(`/user/${id}`) : null,
         ]);
-        setRoles(rolesRes.data.data.items || []);
+        setRoles(rolesRes.data.data.items || rolesRes.data.data || []);
+        
         if (isEditing && id) {
-          const userRes = await api.get(`/users/${id}`);
+          const userRes = await api.get(`/user/${id}`);
           const user = userRes.data.data;
           form.reset({
             name: user.name,
             email: user.email,
             phone: user.phone || '',
             gender: user.gender || '',
-            roleId: user.roleId,
+            avatar: user.avatar || '',
+            roleId: user.roleId?.toString() || '',
             active: user.active,
           });
         }
@@ -86,13 +94,14 @@ export const UserForm = () => {
   const onSubmit = async (values: UserFormValues) => {
     setLoading(true);
     try {
+      const payload: any = { ...values, roleId: parseInt(values.roleId, 10) };
       if (isEditing) {
-        const payload = { ...values };
         if (!payload.password) delete payload.password;
-        await api.patch(`/users/${id}`, payload);
+        if (isEditingSelf) delete payload.roleId; // Prevent self-escalation server rejection
+        await api.patch(`/user/${id}`, payload);
         toast.success('User updated successfully');
       } else {
-        await api.post('/users', values);
+        await api.post('/user', payload);
         toast.success('User created successfully');
       }
       navigate('/users');
@@ -184,7 +193,7 @@ export const UserForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Gender</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} value={field.value}>
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select gender" />
@@ -204,11 +213,25 @@ export const UserForm = () => {
 
               <FormField
                 control={form.control as any}
+                name="avatar"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Avatar URL (optional)</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="https://example.com/avatar.png" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control as any}
                 name="roleId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Role</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} value={field.value} disabled={isEditingSelf}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select a role" />
@@ -216,12 +239,13 @@ export const UserForm = () => {
                       </FormControl>
                       <SelectContent>
                         {roles.map((role) => (
-                          <SelectItem key={role.id} value={role.id}>
+                          <SelectItem key={role.id} value={role.id.toString()}>
                             {role.name}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                    {isEditingSelf && <p className="text-xs text-orange-600 mt-1">You cannot change your own role.</p>}
                     <FormMessage />
                   </FormItem>
                 )}
