@@ -95,11 +95,13 @@ model Attribute {
 model AttributeValue {
   id          Int              @id @default(autoincrement())
   value       String
-  slug        String           @unique
+  slug        String
   reference   String?          // e.g. hex code or media URL
   attributeId Int
   attribute   Attribute        @relation(fields: [attributeId], references: [id], onDelete: Cascade)
   variants    ProductVariant[]
+
+  @@unique([attributeId, slug])
 }
 
 // 9. Product

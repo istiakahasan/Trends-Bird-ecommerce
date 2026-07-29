@@ -134,16 +134,17 @@ export type AttributeValueOrderByWithRelationInput = {
 };
 export type AttributeValueWhereUniqueInput = Prisma.AtLeast<{
     id?: number;
-    slug?: string;
+    attributeId_slug?: Prisma.AttributeValueAttributeIdSlugCompoundUniqueInput;
     AND?: Prisma.AttributeValueWhereInput | Prisma.AttributeValueWhereInput[];
     OR?: Prisma.AttributeValueWhereInput[];
     NOT?: Prisma.AttributeValueWhereInput | Prisma.AttributeValueWhereInput[];
     value?: Prisma.StringFilter<"AttributeValue"> | string;
+    slug?: Prisma.StringFilter<"AttributeValue"> | string;
     reference?: Prisma.StringNullableFilter<"AttributeValue"> | string | null;
     attributeId?: Prisma.IntFilter<"AttributeValue"> | number;
     attribute?: Prisma.XOR<Prisma.AttributeScalarRelationFilter, Prisma.AttributeWhereInput>;
     variants?: Prisma.ProductVariantListRelationFilter;
-}, "id" | "slug">;
+}, "id" | "attributeId_slug">;
 export type AttributeValueOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
     value?: Prisma.SortOrder;
@@ -222,6 +223,10 @@ export type AttributeValueListRelationFilter = {
 };
 export type AttributeValueOrderByRelationAggregateInput = {
     _count?: Prisma.SortOrder;
+};
+export type AttributeValueAttributeIdSlugCompoundUniqueInput = {
+    attributeId: number;
+    slug: string;
 };
 export type AttributeValueCountOrderByAggregateInput = {
     id?: Prisma.SortOrder;

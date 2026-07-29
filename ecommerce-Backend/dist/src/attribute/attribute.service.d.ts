@@ -5,17 +5,17 @@ export declare class AttributeService {
     create(body: any): Promise<{
         data: {
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
-            type: string;
             slug: string;
+            type: string;
+            id: number;
         };
     }>;
     findAll(query: {
@@ -26,17 +26,17 @@ export declare class AttributeService {
     }): Promise<{
         data: ({
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
-            type: string;
             slug: string;
+            type: string;
+            id: number;
         })[];
         meta: {
             total: number;
@@ -48,36 +48,59 @@ export declare class AttributeService {
     findOne(id: number): Promise<{
         data: {
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
-            type: string;
             slug: string;
+            type: string;
+            id: number;
         };
     }>;
     update(id: number, body: any): Promise<{
         data: {
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
-            type: string;
             slug: string;
+            type: string;
+            id: number;
         };
     }>;
     remove(id: number): Promise<{
+        data: {
+            success: boolean;
+        };
+    }>;
+    addValue(attributeId: number, body: any): Promise<{
+        data: {
+            slug: string;
+            id: number;
+            value: string;
+            reference: string | null;
+            attributeId: number;
+        };
+    }>;
+    updateValue(valueId: number, body: any): Promise<{
+        data: {
+            slug: string;
+            id: number;
+            value: string;
+            reference: string | null;
+            attributeId: number;
+        };
+    }>;
+    removeValue(valueId: number): Promise<{
         data: {
             success: boolean;
         };

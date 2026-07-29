@@ -106,31 +106,83 @@ let AttributeService = class AttributeService {
             if (exists)
                 throw new common_1.ConflictException('Another attribute with this name or slug already exists');
         }
-        let valuesUpdate = {};
-        if (body.values && Array.isArray(body.values)) {
-            valuesUpdate = {
-                deleteMany: {},
-                create: body.values.map((v) => ({
-                    value: v.value,
-                    slug: v.slug,
-                    reference: v.reference
-                }))
-            };
-        }
         const updated = await this.prisma.attribute.update({
             where: { id },
             data: {
                 name: body.name,
                 slug: body.slug,
-                type: body.type,
-                values: Object.keys(valuesUpdate).length > 0 ? valuesUpdate : undefined,
+                type: body.type
             },
             include: { values: true }
         });
         return { data: updated };
     }
     async remove(id) {
+        const usedValue = await this.prisma.attributeValue.findFirst({
+            where: {
+                attributeId: id,
+                variants: { some: {} }
+            }
+        });
+        if (usedValue) {
+            throw new common_1.ConflictException('Cannot delete attribute: One or more of its values are used by product variants');
+        }
         await this.prisma.attribute.delete({ where: { id } });
+        return { data: { success: true } };
+    }
+    async addValue(attributeId, body) {
+        const attribute = await this.prisma.attribute.findUnique({ where: { id: attributeId } });
+        if (!attribute)
+            throw new common_1.NotFoundException('Attribute not found');
+        if (!body.value || !body.slug)
+            throw new common_1.BadRequestException('Value and slug are required');
+        const exists = await this.prisma.attributeValue.findUnique({
+            where: { attributeId_slug: { attributeId, slug: body.slug } }
+        });
+        if (exists)
+            throw new common_1.ConflictException(`Value slug '${body.slug}' already exists in this attribute`);
+        const newValue = await this.prisma.attributeValue.create({
+            data: {
+                attributeId,
+                value: body.value,
+                slug: body.slug,
+                reference: body.reference
+            }
+        });
+        return { data: newValue };
+    }
+    async updateValue(valueId, body) {
+        const valueRec = await this.prisma.attributeValue.findUnique({ where: { id: valueId } });
+        if (!valueRec)
+            throw new common_1.NotFoundException('Attribute value not found');
+        if (body.slug && body.slug !== valueRec.slug) {
+            const exists = await this.prisma.attributeValue.findUnique({
+                where: { attributeId_slug: { attributeId: valueRec.attributeId, slug: body.slug } }
+            });
+            if (exists)
+                throw new common_1.ConflictException(`Value slug '${body.slug}' already exists in this attribute`);
+        }
+        const updated = await this.prisma.attributeValue.update({
+            where: { id: valueId },
+            data: {
+                value: body.value,
+                slug: body.slug,
+                reference: body.reference
+            }
+        });
+        return { data: updated };
+    }
+    async removeValue(valueId) {
+        const valueRec = await this.prisma.attributeValue.findUnique({
+            where: { id: valueId },
+            include: { _count: { select: { variants: true } } }
+        });
+        if (!valueRec)
+            throw new common_1.NotFoundException('Attribute value not found');
+        if (valueRec._count.variants > 0) {
+            throw new common_1.ConflictException('Cannot delete value: It is currently used by active product variants');
+        }
+        await this.prisma.attributeValue.delete({ where: { id: valueId } });
         return { data: { success: true } };
     }
 };

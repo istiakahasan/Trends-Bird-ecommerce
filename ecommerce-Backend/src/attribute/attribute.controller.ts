@@ -35,4 +35,23 @@ export class AttributeController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.attributeService.remove(id);
   }
+
+  // Value endpoints
+  @Post(':id/value')
+  @Permissions('attribute:update')
+  addValue(@Param('id', ParseIntPipe) id: number, @Body() body: any) {
+    return this.attributeService.addValue(id, body);
+  }
+
+  @Patch('value/:valueId')
+  @Permissions('attribute:update')
+  updateValue(@Param('valueId', ParseIntPipe) valueId: number, @Body() body: any) {
+    return this.attributeService.updateValue(valueId, body);
+  }
+
+  @Delete('value/:valueId')
+  @Permissions('attribute:update')
+  removeValue(@Param('valueId', ParseIntPipe) valueId: number) {
+    return this.attributeService.removeValue(valueId);
+  }
 }

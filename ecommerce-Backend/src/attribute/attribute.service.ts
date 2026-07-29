@@ -105,25 +105,12 @@ export class AttributeService {
       if (exists) throw new ConflictException('Another attribute with this name or slug already exists');
     }
     
-    let valuesUpdate = {};
-    if (body.values && Array.isArray(body.values)) {
-      valuesUpdate = {
-        deleteMany: {}, // Delete all existing nested values and replace
-        create: body.values.map((v: any) => ({
-          value: v.value,
-          slug: v.slug,
-          reference: v.reference
-        }))
-      };
-    }
-
     const updated = await this.prisma.attribute.update({
       where: { id },
       data: {
         name: body.name,
         slug: body.slug,
-        type: body.type,
-        values: Object.keys(valuesUpdate).length > 0 ? valuesUpdate : undefined,
+        type: body.type
       },
       include: { values: true }
     });
@@ -132,8 +119,81 @@ export class AttributeService {
   }
 
   async remove(id: number) {
-    // Note: cascade delete is enabled for attribute values, so they will be deleted automatically.
+    const usedValue = await this.prisma.attributeValue.findFirst({
+      where: {
+        attributeId: id,
+        variants: { some: {} }
+      }
+    });
+
+    if (usedValue) {
+      throw new ConflictException('Cannot delete attribute: One or more of its values are used by product variants');
+    }
+
     await this.prisma.attribute.delete({ where: { id } });
+    return { data: { success: true } };
+  }
+
+  // Value Management
+  async addValue(attributeId: number, body: any) {
+    const attribute = await this.prisma.attribute.findUnique({ where: { id: attributeId } });
+    if (!attribute) throw new NotFoundException('Attribute not found');
+    if (!body.value || !body.slug) throw new BadRequestException('Value and slug are required');
+
+    const exists = await this.prisma.attributeValue.findUnique({
+      where: { attributeId_slug: { attributeId, slug: body.slug } }
+    });
+
+    if (exists) throw new ConflictException(`Value slug '${body.slug}' already exists in this attribute`);
+
+    const newValue = await this.prisma.attributeValue.create({
+      data: {
+        attributeId,
+        value: body.value,
+        slug: body.slug,
+        reference: body.reference
+      }
+    });
+
+    return { data: newValue };
+  }
+
+  async updateValue(valueId: number, body: any) {
+    const valueRec = await this.prisma.attributeValue.findUnique({ where: { id: valueId } });
+    if (!valueRec) throw new NotFoundException('Attribute value not found');
+
+    if (body.slug && body.slug !== valueRec.slug) {
+      const exists = await this.prisma.attributeValue.findUnique({
+        where: { attributeId_slug: { attributeId: valueRec.attributeId, slug: body.slug } }
+      });
+      if (exists) throw new ConflictException(`Value slug '${body.slug}' already exists in this attribute`);
+    }
+
+    const updated = await this.prisma.attributeValue.update({
+      where: { id: valueId },
+      data: {
+        value: body.value,
+        slug: body.slug,
+        reference: body.reference
+      }
+    });
+
+    return { data: updated };
+  }
+
+  async removeValue(valueId: number) {
+    const valueRec = await this.prisma.attributeValue.findUnique({ 
+      where: { id: valueId },
+      include: { _count: { select: { variants: true } } }
+    });
+    
+    if (!valueRec) throw new NotFoundException('Attribute value not found');
+
+    if (valueRec._count.variants > 0) {
+      throw new ConflictException('Cannot delete value: It is currently used by active product variants');
+    }
+
+    await this.prisma.attributeValue.delete({ where: { id: valueId } });
     return { data: { success: true } };
   }
 }

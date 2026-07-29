@@ -35,6 +35,15 @@ let AttributeController = class AttributeController {
     remove(id) {
         return this.attributeService.remove(id);
     }
+    addValue(id, body) {
+        return this.attributeService.addValue(id, body);
+    }
+    updateValue(valueId, body) {
+        return this.attributeService.updateValue(valueId, body);
+    }
+    removeValue(valueId) {
+        return this.attributeService.removeValue(valueId);
+    }
 };
 exports.AttributeController = AttributeController;
 __decorate([
@@ -78,6 +87,32 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], AttributeController.prototype, "remove", null);
+__decorate([
+    (0, common_1.Post)(':id/value'),
+    (0, permissions_decorator_1.Permissions)('attribute:update'),
+    __param(0, (0, common_1.Param)('id', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", void 0)
+], AttributeController.prototype, "addValue", null);
+__decorate([
+    (0, common_1.Patch)('value/:valueId'),
+    (0, permissions_decorator_1.Permissions)('attribute:update'),
+    __param(0, (0, common_1.Param)('valueId', common_1.ParseIntPipe)),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Object]),
+    __metadata("design:returntype", void 0)
+], AttributeController.prototype, "updateValue", null);
+__decorate([
+    (0, common_1.Delete)('value/:valueId'),
+    (0, permissions_decorator_1.Permissions)('attribute:update'),
+    __param(0, (0, common_1.Param)('valueId', common_1.ParseIntPipe)),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
+], AttributeController.prototype, "removeValue", null);
 exports.AttributeController = AttributeController = __decorate([
     (0, common_1.Controller)('attribute'),
     __metadata("design:paramtypes", [attribute_service_1.AttributeService])
