@@ -1,115 +1,201 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../../api/client';
+import { api } from '../../api/client';
+import { PageHeader } from '../../components/common/PageHeader';
+import { DataTable } from '../../components/common/DataTable';
+import { SearchFilterBar } from '../../components/common/SearchFilterBar';
 import { PermissionGuard } from '../../components/PermissionGuard';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { toast } from 'sonner';
+import { Edit, Trash2 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '../../components/ui/alert-dialog';
 
 export const AttributeList = () => {
-  const [attributes, setAttributes] = useState([]);
-  const [search, setSearch] = useState('');
+  const [attributes, setAttributes] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [pagination, setPagination] = useState({ page: 1, limit: 10, total: 0 });
+  const [search, setSearch] = useState('');
+  const [filters, setFilters] = useState({ type: '' });
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   const fetchAttributes = async () => {
+    setLoading(true);
     try {
-      const res = await api.get('/attributes', {
-        params: { page: pagination.page, limit: pagination.limit, search },
+      const res = await api.get('/attribute', {
+        params: { 
+          page: pagination.page, 
+          limit: pagination.limit, 
+          search: search || undefined,
+          ...filters,
+        },
       });
-      setAttributes(res.data.data.items || []);
-      setPagination(prev => ({ ...prev, total: res.data.data.total || 0 }));
-    } catch (err) {
-      console.error('Error fetching attributes:', err);
+      setAttributes(res.data.data);
+      setPagination({ ...pagination, total: res.data.meta?.total || res.data.data.length });
+    } catch (error) {
+      toast.error('Failed to fetch attributes');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchAttributes();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pagination.page, search]);
+  }, [pagination.page, search, filters]);
 
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Delete this attribute?')) return;
+  const handleDelete = async () => {
+    if (!deleteId) return;
     try {
-      await api.delete(`/attributes/${id}`);
+      await api.delete(`/attribute/${deleteId}`);
+      toast.success('Attribute deleted successfully');
       fetchAttributes();
-    } catch (err) {
-      alert('Failed to delete attribute');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to delete attribute');
+    } finally {
+      setDeleteId(null);
     }
   };
 
+  const columns = [
+    { key: 'name', header: 'Name', className: 'font-medium' },
+    { 
+      key: 'slug', 
+      header: 'Slug',
+      render: (attr: any) => (
+        <span className="font-mono text-xs bg-gray-50 px-2 py-1 rounded text-gray-600">{attr.slug}</span>
+      )
+    },
+    {
+      key: 'type',
+      header: 'Type',
+      render: (attr: any) => (
+        <Badge variant="outline" className="capitalize">
+          {attr.type}
+        </Badge>
+      ),
+    },
+    {
+      key: 'actions',
+      header: 'Actions',
+      render: (attr: any) => (
+        <div className="flex gap-2">
+          <PermissionGuard permission="attribute:update">
+            <Link to={`/attributes/${attr.id}/edit`}>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Edit className="h-4 w-4" />
+              </Button>
+            </Link>
+          </PermissionGuard>
+          <PermissionGuard permission="attribute:delete">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 text-red-500 hover:text-red-700"
+              onClick={() => setDeleteId(attr.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </PermissionGuard>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900">Attributes</h2>
-        <PermissionGuard permission="attribute:create">
-          <Link to="/attributes/create" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
-            + New Attribute
-          </Link>
-        </PermissionGuard>
-      </div>
+    <div className="space-y-6">
+      <PageHeader
+        title="Attributes"
+        description="Manage product variation attributes like Size and Color"
+        createButton={{
+          label: 'New Attribute',
+          href: '/attributes/create',
+          permission: 'attribute:create',
+        }}
+      />
 
-      <div className="flex gap-4">
-        <input
-          placeholder="Search attributes..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="border border-gray-200 px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
-        />
-      </div>
+      <SearchFilterBar
+        searchPlaceholder="Search by name or slug..."
+        onSearch={setSearch}
+        filters={[
+          {
+            key: 'type',
+            label: 'Type',
+            options: [
+              { value: 'dropdown', label: 'Dropdown' },
+              { value: 'radio', label: 'Radio' },
+              { value: 'checkbox', label: 'Checkbox' },
+              { value: 'colour swatch', label: 'Colour Swatch' },
+              { value: 'image swatch', label: 'Image Swatch' },
+            ],
+          },
+        ]}
+        onFilterChange={(key, value) => setFilters({ ...filters, [key]: value === 'all' ? '' : value })}
+        onClear={() => {
+          setSearch('');
+          setFilters({ type: '' });
+        }}
+      />
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="border-b border-gray-100 text-gray-500 text-sm font-semibold">
-              <th className="pb-3 pl-2">Name</th>
-              <th className="pb-3">Slug</th>
-              <th className="pb-3">Type</th>
-              <th className="pb-3 text-right pr-2">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="text-sm text-gray-600 divide-y divide-gray-50">
-            {attributes.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="py-4 text-center text-gray-400">No attributes found.</td>
-              </tr>
-            ) : (
-              attributes.map((a: any) => (
-                <tr key={a.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="py-3 pl-2 font-semibold text-gray-800">{a.name}</td>
-                  <td className="py-3 font-mono text-xs bg-gray-50 px-2 py-0.5 rounded text-gray-600 inline-block mt-2">{a.slug}</td>
-                  <td className="py-3 capitalize">{a.type}</td>
-                  <td className="py-3 text-right pr-2 space-x-2">
-                    <PermissionGuard permission="attribute:update">
-                      <Link to={`/attributes/${a.id}`} className="text-blue-600 hover:text-blue-800 font-semibold">Edit</Link>
-                    </PermissionGuard>
-                    <PermissionGuard permission="attribute:delete">
-                      <button onClick={() => handleDelete(a.id)} className="text-red-600 hover:text-red-800 font-semibold">Delete</button>
-                    </PermissionGuard>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        data={attributes}
+        columns={columns}
+        loading={loading}
+      />
 
       {pagination.total > pagination.limit && (
-        <div className="flex justify-between items-center pt-4 border-t border-gray-50 text-sm">
-          <button
-            disabled={pagination.page === 1}
-            onClick={() => setPagination(prev => ({ ...prev, page: prev.page - 1 }))}
-            className="border border-gray-200 px-3 py-1.5 rounded-lg disabled:opacity-50 hover:bg-gray-50 font-medium"
-          >
-            Previous
-          </button>
-          <span className="text-gray-500 font-medium">Page {pagination.page} of {Math.ceil(pagination.total / pagination.limit)}</span>
-          <button
-            disabled={pagination.page * pagination.limit >= pagination.total}
-            onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-            className="border border-gray-200 px-3 py-1.5 rounded-lg disabled:opacity-50 hover:bg-gray-50 font-medium"
-          >
-            Next
-          </button>
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            Showing {attributes.length} of {pagination.total} attributes
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={pagination.page <= 1}
+              onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+            >
+              Previous
+            </Button>
+            <span className="flex items-center px-2 text-sm">
+              Page {pagination.page} of {Math.ceil(pagination.total / pagination.limit)}
+            </span>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={pagination.page >= Math.ceil(pagination.total / pagination.limit)}
+              onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       )}
+
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. You cannot delete an attribute if its values are currently being used by any product variants.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

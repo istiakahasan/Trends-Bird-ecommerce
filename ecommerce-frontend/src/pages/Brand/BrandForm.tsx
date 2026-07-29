@@ -1,105 +1,206 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
-import api from '../../api/client';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { api } from '../../api/client';
+import { Button } from '../../components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '../../components/ui/form';
+import { Input } from '../../components/ui/input';
+import { Textarea } from '../../components/ui/textarea';
+import { Card, CardContent } from '../../components/ui/card';
+import { Switch } from '../../components/ui/switch';
+import { toast } from 'sonner';
+import { ArrowLeft, Save, Loader2 } from 'lucide-react';
+
+const brandSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
+  slug: z.string().min(1, 'Slug is required'),
+  description: z.string().optional(),
+  logo: z.string().optional(),
+  status: z.boolean().default(true),
+});
+
+type BrandFormValues = z.infer<typeof brandSchema>;
 
 export const BrandForm = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const isEdit = !!id;
-
-  const [name, setName] = useState('');
-  const [slug, setSlug] = useState('');
-  const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const isEditing = !!id;
+
+  const form = useForm<BrandFormValues>({
+    resolver: zodResolver(brandSchema) as any,
+    defaultValues: {
+      name: '',
+      slug: '',
+      description: '',
+      logo: '',
+      status: true,
+    },
+  });
 
   useEffect(() => {
-    if (isEdit) {
-      const fetchBrand = async () => {
-        try {
-          const res = await api.get(`/brands/${id}`);
-          const { name, slug, description } = res.data.data;
-          setName(name);
-          setSlug(slug);
-          setDescription(description || '');
-        } catch (err) {
-          setError('Failed to fetch brand details');
+    const fetchData = async () => {
+      try {
+        if (isEditing && id) {
+          const res = await api.get(`/brand/${id}`);
+          const brand = res.data.data;
+          form.reset({
+            name: brand.name,
+            slug: brand.slug,
+            description: brand.description || '',
+            logo: brand.logo || '',
+            status: brand.status ?? true,
+          });
         }
-      };
-      fetchBrand();
-    }
-  }, [id, isEdit]);
+      } catch (error) {
+        toast.error('Failed to load brand data');
+      }
+    };
+    fetchData();
+  }, [id, isEditing, form]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (values: BrandFormValues) => {
     setLoading(true);
-    setError('');
     try {
-      const payload = { name, slug, description };
-      if (isEdit) {
-        await api.put(`/brands/${id}`, payload);
+      if (isEditing) {
+        await api.patch(`/brand/${id}`, values);
+        toast.success('Brand updated successfully');
       } else {
-        await api.post('/brands', payload);
+        await api.post('/brand', values);
+        toast.success('Brand created successfully');
       }
       navigate('/brands');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to save brand');
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to save brand');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-xl mx-auto bg-white p-8 rounded-xl border border-gray-100 shadow-sm space-y-6">
-      <div className="flex justify-between items-center pb-4 border-b border-gray-50">
-        <h2 className="text-xl font-bold text-gray-900">{isEdit ? 'Edit Brand' : 'Create Brand'}</h2>
-        <Link to="/brands" className="text-sm font-semibold text-gray-500 hover:text-gray-700">Cancel</Link>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={() => navigate('/brands')}>
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+        <div>
+          <h2 className="text-2xl font-bold">{isEditing ? 'Edit Brand' : 'Create New Brand'}</h2>
+          <p className="text-gray-500 text-sm">
+            {isEditing ? 'Update brand details' : 'Add a new brand to the catalog'}
+          </p>
+        </div>
       </div>
 
-      {error && <div className="bg-red-50 text-red-700 p-3 rounded-lg text-sm border border-red-100">{error}</div>}
+      <Card>
+        <CardContent className="pt-6">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <FormField
+                  control={form.control as any}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Brand Name</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="e.g. Nike" onChange={(e) => {
+                          field.onChange(e);
+                          if (!isEditing) {
+                            form.setValue('slug', e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, ''));
+                          }
+                        }}/>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control as any}
+                  name="slug"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Slug</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="e.g. nike" className="font-mono" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-1">
-          <label className="block text-sm font-semibold text-gray-700">Name</label>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. Nike"
-            required
-          />
-        </div>
+              <FormField
+                control={form.control as any}
+                name="logo"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Logo URL</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="https://example.com/logo.png" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        <div className="space-y-1">
-          <label className="block text-sm font-semibold text-gray-700">Slug</label>
-          <input
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-            className="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="e.g. nike"
-            required
-          />
-        </div>
+              <FormField
+                control={form.control as any}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea {...field} placeholder="Brand description..." rows={4} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-        <div className="space-y-1">
-          <label className="block text-sm font-semibold text-gray-700">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            className="w-full border border-gray-200 px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Describe the brand philosophy and products..."
-          />
-        </div>
+              <FormField
+                control={form.control as any}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">Active Status</FormLabel>
+                      <div className="text-sm text-gray-500">
+                        {field.value ? 'Brand is active and visible' : 'Brand is hidden'}
+                      </div>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-2 rounded-lg text-sm transition-colors shadow-sm"
-        >
-          {loading ? 'Saving...' : 'Save Brand'}
-        </button>
-      </form>
+              <div className="flex gap-4 pt-4">
+                <Button type="submit" disabled={loading}>
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  <Save className="mr-2 h-4 w-4" />
+                  {isEditing ? 'Update Brand' : 'Create Brand'}
+                </Button>
+                <Button variant="outline" type="button" onClick={() => navigate('/brands')}>
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 };
