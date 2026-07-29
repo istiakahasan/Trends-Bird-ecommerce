@@ -1,0 +1,110 @@
+// This im Prisma schema 
+
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 1. Authentication (Handled stateless in JWT/Controllers)
+
+// 2. Permission
+model Permission {
+  id          Int      @id @default(autoincrement())
+  action      String   // e.g. "create", "read", "update", "delete"
+  subject     String   // e.g. "product", "category", "user"
+  roles       Role[]
+
+  @@unique([action, subject])
+}
+
+// 3. Role
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  permissions Permission[]
+  users       User[]
+}
+
+// 4. User
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String?
+  roleId    Int?
+  role      Role?    @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// 5. Media
+model Media {
+  id        Int      @id @default(autoincrement())
+  url       String
+  type      String
+  products  Product[]
+  createdAt DateTime @default(now())
+}
+
+// 6. Category
+model Category {
+  id        Int        @id @default(autoincrement())
+  name      String
+  parentId  Int?
+  parent    Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToCategory")
+  products  Product[]
+}
+
+// 7. Brand
+model Brand {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique
+  products Product[]
+}
+
+// 8. Attribute
+model Attribute {
+  id     Int              @id @default(autoincrement())
+  name   String           @unique
+  values AttributeValue[]
+}
+
+model AttributeValue {
+  id          Int              @id @default(autoincrement())
+  value       String
+  attributeId Int
+  attribute   Attribute        @relation(fields: [attributeId], references: [id])
+  variants    ProductVariant[]
+}
+
+// 9. Product
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  brandId     Int?
+  brand       Brand?    @relation(fields: [brandId], references: [id])
+  categoryId  Int?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  media       Media[]
+  variants    ProductVariant[]
+}
+
+model ProductVariant {
+  id         Int              @id @default(autoincrement())
+  productId  Int
+  product    Product          @relation(fields: [productId], references: [id])
+  sku        String           @unique
+  price      Float
+  stock      Int              @default(0)
+  attributes AttributeValue[]
+}
