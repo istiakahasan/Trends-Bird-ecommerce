@@ -1,10 +1,12 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Module, Global } from '@nestjs/common';
 import { APP_GUARD, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
+
 import { AuthGuard } from './guards/auth.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { GlobalExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
+import { StripCredentialsInterceptor } from './interceptors/strip-credentials.interceptor';
 
 // Infrastructure & Auth Modules
 import { PrismaModule } from '../prisma/prisma.module';
@@ -20,6 +22,7 @@ import { PermissionModule } from '../permission/permission.module';
 import { RoleModule } from '../role/role.module';
 import { AttributeModule } from '../attribute/attribute.module';
 
+@Global()
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -39,6 +42,7 @@ import { AttributeModule } from '../attribute/attribute.module';
     { provide: APP_GUARD, useClass: PermissionsGuard }, // order matters: Auth first
     { provide: APP_FILTER, useClass: GlobalExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: StripCredentialsInterceptor },
   ],
 })
-export class AppModule {}
+export class AppModule {}

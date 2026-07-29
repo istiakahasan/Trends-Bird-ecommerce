@@ -10,4 +10,15 @@ export declare class AuthService {
             refreshToken: string;
         };
     }>;
+    refresh(body: any): Promise<{
+        data: {
+            accessToken: string;
+            refreshToken: string;
+        };
+    }>;
+    logout(userId: number): Promise<{
+        data: {
+            success: boolean;
+        };
+    }>;
 }

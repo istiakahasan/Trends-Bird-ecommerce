@@ -16,16 +16,41 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const public_decorator_1 = require("../common/decorators/public.decorator");
+const prisma_service_1 = require("../prisma/prisma.service");
 let AuthController = class AuthController {
-    constructor(authService) {
+    constructor(authService, prisma) {
         this.authService = authService;
+        this.prisma = prisma;
     }
     async login(body) {
         return this.authService.login(body);
     }
+    async refresh(body) {
+        return this.authService.refresh(body);
+    }
+    async logout(req) {
+        return this.authService.logout(req.user.userId);
+    }
     async getMe(req) {
+        const user = await this.prisma.user.findUnique({
+            where: { id: req.user.userId },
+            include: {
+                role: {
+                    include: { permissions: true }
+                }
+            }
+        });
+        if (!user || !user.active) {
+            throw new common_1.UnauthorizedException('User is inactive or deleted');
+        }
+        const payload = {
+            sub: user.id,
+            email: user.email,
+            role: user.role?.name || null,
+            permissions: user.role?.permissions.map(p => p.name) || [],
+        };
         return {
-            data: req.user
+            data: payload
         };
     }
 };
@@ -39,6 +64,21 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
+    (0, public_decorator_1.Public)(),
+    (0, common_1.Post)('refresh'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "refresh", null);
+__decorate([
+    (0, common_1.Post)('logout'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "logout", null);
+__decorate([
     (0, common_1.Get)('me'),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
@@ -47,6 +87,7 @@ __decorate([
 ], AuthController.prototype, "getMe", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),
-    __metadata("design:paramtypes", [auth_service_1.AuthService])
+    __metadata("design:paramtypes", [auth_service_1.AuthService,
+        prisma_service_1.PrismaService])
 ], AuthController);
 //# sourceMappingURL=auth.controller.js.map

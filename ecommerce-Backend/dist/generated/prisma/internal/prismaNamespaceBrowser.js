@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.ProductVariantScalarFieldEnum = exports.ProductScalarFieldEnum = exports.AttributeValueScalarFieldEnum = exports.AttributeScalarFieldEnum = exports.BrandScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.MediaScalarFieldEnum = exports.UserScalarFieldEnum = exports.RoleScalarFieldEnum = exports.PermissionScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
+exports.NullsOrder = exports.QueryMode = exports.SortOrder = exports.ProductVariantScalarFieldEnum = exports.ProductScalarFieldEnum = exports.AttributeValueScalarFieldEnum = exports.AttributeScalarFieldEnum = exports.BrandScalarFieldEnum = exports.CategoryScalarFieldEnum = exports.MediaScalarFieldEnum = exports.UserScalarFieldEnum = exports.RoleScalarFieldEnum = exports.PermissionScalarFieldEnum = exports.PermissionGroupScalarFieldEnum = exports.TransactionIsolationLevel = exports.ModelName = exports.AnyNull = exports.JsonNull = exports.DbNull = exports.NullTypes = exports.Decimal = void 0;
 const runtime = require("@prisma/client/runtime/index-browser");
 exports.Decimal = runtime.Decimal;
 exports.NullTypes = {
@@ -12,6 +12,7 @@ exports.DbNull = runtime.DbNull;
 exports.JsonNull = runtime.JsonNull;
 exports.AnyNull = runtime.AnyNull;
 exports.ModelName = {
+    PermissionGroup: 'PermissionGroup',
     Permission: 'Permission',
     Role: 'Role',
     User: 'User',
@@ -29,10 +30,16 @@ exports.TransactionIsolationLevel = runtime.makeStrictEnum({
     RepeatableRead: 'RepeatableRead',
     Serializable: 'Serializable'
 });
+exports.PermissionGroupScalarFieldEnum = {
+    id: 'id',
+    name: 'name',
+    description: 'description'
+};
 exports.PermissionScalarFieldEnum = {
     id: 'id',
-    action: 'action',
-    subject: 'subject'
+    name: 'name',
+    description: 'description',
+    groupId: 'groupId'
 };
 exports.RoleScalarFieldEnum = {
     id: 'id',
@@ -43,6 +50,11 @@ exports.UserScalarFieldEnum = {
     email: 'email',
     password: 'password',
     name: 'name',
+    phone: 'phone',
+    gender: 'gender',
+    avatar: 'avatar',
+    active: 'active',
+    refreshToken: 'refreshToken',
     roleId: 'roleId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'

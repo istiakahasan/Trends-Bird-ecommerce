@@ -1,26 +1,38 @@
-import { Controller, Get, Post, Patch, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Param, Body, Query, Req, ParseIntPipe } from '@nestjs/common';
 import { Permissions } from '../common/decorators/permissions.decorator';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
+  constructor(private userService: UserService) {}
   
   @Get()
   @Permissions('user:read')
-  findAll() {}
+  findAll(@Query() query: any) {
+    return this.userService.findAll(query);
+  }
 
   @Get(':id')
   @Permissions('user:read')
-  findOne(@Param('id') id: string) {}
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.findOne(id);
+  }
 
   @Post()
   @Permissions('user:create')
-  create(@Body() body: any) {}
+  create(@Body() body: any) {
+    return this.userService.create(body);
+  }
 
   @Patch(':id')
   @Permissions('user:update')
-  update(@Param('id') id: string, @Body() body: any) {}
+  update(@Param('id', ParseIntPipe) id: number, @Body() body: any, @Req() req: any) {
+    return this.userService.update(id, req.user.userId, body);
+  }
 
   @Delete(':id')
   @Permissions('user:delete')
-  remove(@Param('id') id: string) {}
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.userService.remove(id);
+  }
 }

@@ -2,6 +2,7 @@ import * as Prisma from './internal/prismaNamespaceBrowser';
 export { Prisma };
 export * as $Enums from './enums';
 export * from './enums';
+export type PermissionGroup = Prisma.PermissionGroupModel;
 export type Permission = Prisma.PermissionModel;
 export type Role = Prisma.RoleModel;
 export type User = Prisma.UserModel;

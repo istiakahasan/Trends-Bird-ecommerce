@@ -32,33 +32,42 @@ const adapter = new adapter_pg_1.PrismaPg(pool);
 const prisma = new client_1.PrismaClient({ adapter });
 async function main() {
     const hashedPassword = await bcrypt.hash('admin123', 10);
-    const permissionsList = [
-        { subject: 'dashboard', action: 'watch' },
-        { subject: 'permission', action: 'watch' }, { subject: 'permission', action: 'create' }, { subject: 'permission', action: 'read' }, { subject: 'permission', action: 'update' }, { subject: 'permission', action: 'delete' },
-        { subject: 'role', action: 'watch' }, { subject: 'role', action: 'create' }, { subject: 'role', action: 'read' }, { subject: 'role', action: 'update' }, { subject: 'role', action: 'delete' },
-        { subject: 'user', action: 'watch' }, { subject: 'user', action: 'create' }, { subject: 'user', action: 'read' }, { subject: 'user', action: 'update' }, { subject: 'user', action: 'delete' },
-        { subject: 'media', action: 'watch' }, { subject: 'media', action: 'read' }, { subject: 'media', action: 'upload' }, { subject: 'media', action: 'write' }, { subject: 'media', action: 'delete' },
-        { subject: 'category', action: 'watch' }, { subject: 'category', action: 'create' }, { subject: 'category', action: 'read' }, { subject: 'category', action: 'update' }, { subject: 'category', action: 'delete' },
-        { subject: 'brand', action: 'watch' }, { subject: 'brand', action: 'create' }, { subject: 'brand', action: 'read' }, { subject: 'brand', action: 'update' }, { subject: 'brand', action: 'delete' },
-        { subject: 'attribute', action: 'watch' }, { subject: 'attribute', action: 'create' }, { subject: 'attribute', action: 'read' }, { subject: 'attribute', action: 'update' }, { subject: 'attribute', action: 'delete' },
-        { subject: 'product', action: 'watch' }, { subject: 'product', action: 'create' }, { subject: 'product', action: 'read' }, { subject: 'product', action: 'update' }, { subject: 'product', action: 'delete' },
-        { subject: 'all', action: 'manage' }
+    const groupedPermissions = [
+        { group: 'dashboard', actions: ['watch'] },
+        { group: 'permission', actions: ['watch', 'create', 'read', 'update', 'delete'] },
+        { group: 'role', actions: ['watch', 'create', 'read', 'update', 'delete'] },
+        { group: 'user', actions: ['watch', 'create', 'read', 'update', 'delete'] },
+        { group: 'media', actions: ['watch', 'read', 'upload', 'write', 'delete'] },
+        { group: 'category', actions: ['watch', 'create', 'read', 'update', 'delete'] },
+        { group: 'brand', actions: ['watch', 'create', 'read', 'update', 'delete'] },
+        { group: 'attribute', actions: ['watch', 'create', 'read', 'update', 'delete'] },
+        { group: 'product', actions: ['watch', 'create', 'read', 'update', 'delete'] },
+        { group: 'all', actions: ['manage'] }
     ];
     try {
         await prisma.$executeRaw `SELECT setval('"Permission_id_seq"', (SELECT COALESCE(MAX(id), 0) + 1 FROM "Permission"), false);`;
+        await prisma.$executeRaw `SELECT setval('"PermissionGroup_id_seq"', (SELECT COALESCE(MAX(id), 0) + 1 FROM "PermissionGroup"), false);`;
     }
     catch (e) {
     }
     const createdPermissions = [];
-    for (const p of permissionsList) {
-        const perm = await prisma.permission.upsert({
-            where: { action_subject: { action: p.action, subject: p.subject } },
+    for (const gp of groupedPermissions) {
+        const pg = await prisma.permissionGroup.upsert({
+            where: { name: gp.group },
             update: {},
-            create: p,
+            create: { name: gp.group, description: `Group for ${gp.group} module` },
         });
-        createdPermissions.push(perm);
+        for (const action of gp.actions) {
+            const permName = `${gp.group}:${action}`;
+            const perm = await prisma.permission.upsert({
+                where: { name: permName },
+                update: { groupId: pg.id },
+                create: { name: permName, description: `Allows ${action} on ${gp.group}`, groupId: pg.id },
+            });
+            createdPermissions.push(perm);
+        }
     }
-    const superPerm = createdPermissions.find(p => p.subject === 'all' && p.action === 'manage');
+    const superPerm = createdPermissions.find(p => p.name === 'all:manage');
     const adminRole = await prisma.role.upsert({
         where: { name: 'Admin' },
         update: {
@@ -75,16 +84,20 @@ async function main() {
     });
     await prisma.user.upsert({
         where: { email: 'admin@admin.com' },
-        update: { roleId: adminRole.id },
+        update: { roleId: adminRole.id, active: true },
         create: {
             email: 'admin@admin.com',
             password: hashedPassword,
             name: 'Admin User',
             roleId: adminRole.id,
+            active: true
         },
     });
-    const catalogPermissions = createdPermissions.filter(p => ['category', 'brand', 'attribute', 'product'].includes(p.subject) &&
-        ['watch', 'read'].includes(p.action));
+    const catalogPermissions = createdPermissions.filter(p => {
+        const [subj, act] = p.name.split(':');
+        return ['category', 'brand', 'attribute', 'product'].includes(subj) &&
+            ['watch', 'read'].includes(act);
+    });
     const catalogRole = await prisma.role.upsert({
         where: { name: 'CatalogUser' },
         update: {},
@@ -98,12 +111,13 @@ async function main() {
     const catalogPassword = await bcrypt.hash('catalog123', 10);
     await prisma.user.upsert({
         where: { email: 'catalog@user.com' },
-        update: { roleId: catalogRole.id },
+        update: { roleId: catalogRole.id, active: true },
         create: {
             email: 'catalog@user.com',
             password: catalogPassword,
             name: 'Catalog User',
-            roleId: catalogRole.id
+            roleId: catalogRole.id,
+            active: true
         }
     });
     console.log(`Database seeded successfully.`);

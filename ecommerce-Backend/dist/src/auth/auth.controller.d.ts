@@ -1,14 +1,32 @@
 import { AuthService } from './auth.service';
+import { PrismaService } from '../prisma/prisma.service';
 export declare class AuthController {
     private authService;
-    constructor(authService: AuthService);
+    private prisma;
+    constructor(authService: AuthService, prisma: PrismaService);
     login(body: any): Promise<{
         data: {
             accessToken: string;
             refreshToken: string;
         };
     }>;
+    refresh(body: any): Promise<{
+        data: {
+            accessToken: string;
+            refreshToken: string;
+        };
+    }>;
+    logout(req: any): Promise<{
+        data: {
+            success: boolean;
+        };
+    }>;
     getMe(req: any): Promise<{
-        data: any;
+        data: {
+            sub: number;
+            email: string;
+            role: string;
+            permissions: string[];
+        };
     }>;
 }

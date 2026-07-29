@@ -16,13 +16,20 @@ datasource db {
 // 1. Authentication (Handled stateless in JWT/Controllers)
 
 // 2. Permission
-model Permission {
-  id          Int      @id @default(autoincrement())
-  action      String   // e.g. "create", "read", "update", "delete"
-  subject     String   // e.g. "product", "category", "user"
-  roles       Role[]
+model PermissionGroup {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique // e.g. "product"
+  description String?
+  permissions Permission[]
+}
 
-  @@unique([action, subject])
+model Permission {
+  id          Int             @id @default(autoincrement())
+  name        String          @unique // e.g. "product:create"
+  description String?
+  groupId     Int
+  group       PermissionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  roles       Role[]
 }
 
 // 3. Role
@@ -35,14 +42,19 @@ model Role {
 
 // 4. User
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  name      String?
-  roleId    Int?
-  role      Role?    @relation(fields: [roleId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  password     String
+  name         String?
+  phone        String?
+  gender       String?
+  avatar       String?
+  active       Boolean  @default(true)
+  refreshToken String?
+  roleId       Int
+  role         Role     @relation(fields: [roleId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 // 5. Media

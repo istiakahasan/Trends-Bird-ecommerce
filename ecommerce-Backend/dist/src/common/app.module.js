@@ -8,12 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
-const config_1 = require("@nestjs/config");
 const core_1 = require("@nestjs/core");
+const config_1 = require("@nestjs/config");
 const auth_guard_1 = require("./guards/auth.guard");
 const permissions_guard_1 = require("./guards/permissions.guard");
 const http_exception_filter_1 = require("./filters/http-exception.filter");
 const transform_interceptor_1 = require("./interceptors/transform.interceptor");
+const strip_credentials_interceptor_1 = require("./interceptors/strip-credentials.interceptor");
 const prisma_module_1 = require("../prisma/prisma.module");
 const auth_module_1 = require("../auth/auth.module");
 const user_module_1 = require("../user/user.module");
@@ -28,6 +29,7 @@ let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
+    (0, common_1.Global)(),
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
@@ -47,6 +49,7 @@ exports.AppModule = AppModule = __decorate([
             { provide: core_1.APP_GUARD, useClass: permissions_guard_1.PermissionsGuard },
             { provide: core_1.APP_FILTER, useClass: http_exception_filter_1.GlobalExceptionFilter },
             { provide: core_1.APP_INTERCEPTOR, useClass: transform_interceptor_1.TransformInterceptor },
+            { provide: core_1.APP_INTERCEPTOR, useClass: strip_credentials_interceptor_1.StripCredentialsInterceptor },
         ],
     })
 ], AppModule);

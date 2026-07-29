@@ -11,6 +11,7 @@ export declare const DbNull: import("@prisma/client-runtime-utils").DbNullClass;
 export declare const JsonNull: import("@prisma/client-runtime-utils").JsonNullClass;
 export declare const AnyNull: import("@prisma/client-runtime-utils").AnyNullClass;
 export declare const ModelName: {
+    readonly PermissionGroup: "PermissionGroup";
     readonly Permission: "Permission";
     readonly Role: "Role";
     readonly User: "User";
@@ -30,10 +31,17 @@ export declare const TransactionIsolationLevel: {
     readonly Serializable: "Serializable";
 };
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel];
+export declare const PermissionGroupScalarFieldEnum: {
+    readonly id: "id";
+    readonly name: "name";
+    readonly description: "description";
+};
+export type PermissionGroupScalarFieldEnum = (typeof PermissionGroupScalarFieldEnum)[keyof typeof PermissionGroupScalarFieldEnum];
 export declare const PermissionScalarFieldEnum: {
     readonly id: "id";
-    readonly action: "action";
-    readonly subject: "subject";
+    readonly name: "name";
+    readonly description: "description";
+    readonly groupId: "groupId";
 };
 export type PermissionScalarFieldEnum = (typeof PermissionScalarFieldEnum)[keyof typeof PermissionScalarFieldEnum];
 export declare const RoleScalarFieldEnum: {
@@ -46,6 +54,11 @@ export declare const UserScalarFieldEnum: {
     readonly email: "email";
     readonly password: "password";
     readonly name: "name";
+    readonly phone: "phone";
+    readonly gender: "gender";
+    readonly avatar: "avatar";
+    readonly active: "active";
+    readonly refreshToken: "refreshToken";
     readonly roleId: "roleId";
     readonly createdAt: "createdAt";
     readonly updatedAt: "updatedAt";
