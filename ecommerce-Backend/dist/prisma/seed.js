@@ -7,8 +7,9 @@ const adapter_pg_1 = require("@prisma/adapter-pg");
 const pg_1 = require("pg");
 function getConnectionString() {
     const url = process.env.DATABASE_URL;
-    if (!url)
+    if (!url) {
         throw new Error('DATABASE_URL is not defined in environment variables');
+    }
     if (url.startsWith('prisma+postgres://')) {
         try {
             const parsed = new URL(url);
@@ -16,8 +17,9 @@ function getConnectionString() {
             if (apiKey) {
                 const decoded = Buffer.from(apiKey, 'base64').toString('utf-8');
                 const json = JSON.parse(decoded);
-                if (json.databaseUrl)
+                if (json.databaseUrl) {
                     return json.databaseUrl;
+                }
             }
         }
         catch (e) {
@@ -27,9 +29,16 @@ function getConnectionString() {
     return url;
 }
 const connectionString = getConnectionString();
-const pool = new pg_1.Pool({ connectionString });
+const pool = new pg_1.Pool({
+    connectionString,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
 const adapter = new adapter_pg_1.PrismaPg(pool);
-const prisma = new client_1.PrismaClient({ adapter });
+const prisma = new client_1.PrismaClient({
+    adapter
+});
 async function main() {
     const hashedPassword = await bcrypt.hash('admin123', 10);
     const groupedPermissions = [
@@ -44,32 +53,40 @@ async function main() {
         { group: 'product', actions: ['watch', 'create', 'read', 'update', 'delete'] },
         { group: 'all', actions: ['manage'] }
     ];
-    try {
-        await prisma.$executeRaw `SELECT setval('"Permission_id_seq"', (SELECT COALESCE(MAX(id), 0) + 1 FROM "Permission"), false);`;
-        await prisma.$executeRaw `SELECT setval('"PermissionGroup_id_seq"', (SELECT COALESCE(MAX(id), 0) + 1 FROM "PermissionGroup"), false);`;
-    }
-    catch (e) {
-    }
     const createdPermissions = [];
     for (const gp of groupedPermissions) {
-        const pg = await prisma.permissionGroup.upsert({
-            where: { name: gp.group },
+        const permissionGroup = await prisma.permissionGroup.upsert({
+            where: {
+                name: gp.group
+            },
             update: {},
-            create: { name: gp.group, description: `Group for ${gp.group} module` },
+            create: {
+                name: gp.group,
+                description: `Group for ${gp.group} module`
+            }
         });
         for (const action of gp.actions) {
-            const permName = `${gp.group}:${action}`;
-            const perm = await prisma.permission.upsert({
-                where: { name: permName },
-                update: { groupId: pg.id },
-                create: { name: permName, description: `Allows ${action} on ${gp.group}`, groupId: pg.id },
+            const permissionName = `${gp.group}:${action}`;
+            const permission = await prisma.permission.upsert({
+                where: {
+                    name: permissionName
+                },
+                update: {
+                    groupId: permissionGroup.id
+                },
+                create: {
+                    name: permissionName,
+                    description: `Allows ${action} on ${gp.group}`,
+                    groupId: permissionGroup.id
+                }
             });
-            createdPermissions.push(perm);
+            createdPermissions.push(permission);
         }
     }
-    const superPerm = createdPermissions.find(p => p.name === 'all:manage');
     const adminRole = await prisma.role.upsert({
-        where: { name: 'Admin' },
+        where: {
+            name: 'Admin'
+        },
         update: {
             permissions: {
                 set: createdPermissions.map(p => ({ id: p.id }))
@@ -80,27 +97,48 @@ async function main() {
             permissions: {
                 connect: createdPermissions.map(p => ({ id: p.id }))
             }
-        },
+        }
     });
     await prisma.user.upsert({
-        where: { email: 'admin@admin.com' },
-        update: { roleId: adminRole.id, active: true },
+        where: {
+            email: 'admin@admin.com'
+        },
+        update: {
+            roleId: adminRole.id,
+            active: true,
+            password: hashedPassword
+        },
         create: {
             email: 'admin@admin.com',
             password: hashedPassword,
             name: 'Admin User',
             roleId: adminRole.id,
             active: true
-        },
+        }
     });
     const catalogPermissions = createdPermissions.filter(p => {
-        const [subj, act] = p.name.split(':');
-        return ['category', 'brand', 'attribute', 'product'].includes(subj) &&
-            ['watch', 'read'].includes(act);
+        const [subject, action] = p.name.split(':');
+        return ([
+            'category',
+            'brand',
+            'attribute',
+            'product'
+        ].includes(subject)
+            &&
+                [
+                    'watch',
+                    'read'
+                ].includes(action));
     });
     const catalogRole = await prisma.role.upsert({
-        where: { name: 'CatalogUser' },
-        update: {},
+        where: {
+            name: 'CatalogUser'
+        },
+        update: {
+            permissions: {
+                set: catalogPermissions.map(p => ({ id: p.id }))
+            }
+        },
         create: {
             name: 'CatalogUser',
             permissions: {
@@ -110,8 +148,14 @@ async function main() {
     });
     const catalogPassword = await bcrypt.hash('catalog123', 10);
     await prisma.user.upsert({
-        where: { email: 'catalog@user.com' },
-        update: { roleId: catalogRole.id, active: true },
+        where: {
+            email: 'catalog@user.com'
+        },
+        update: {
+            roleId: catalogRole.id,
+            active: true,
+            password: catalogPassword
+        },
         create: {
             email: 'catalog@user.com',
             password: catalogPassword,
@@ -120,17 +164,16 @@ async function main() {
             active: true
         }
     });
-    console.log(`Database seeded successfully.`);
-    console.log(`- ${createdPermissions.length} permissions verified.`);
-    console.log(`- Admin User seeded (admin@admin.com / admin123)`);
-    console.log(`- Catalog User seeded (catalog@user.com / catalog123)`);
+    console.log('Database seeded successfully.');
+    console.log('- Admin User: admin@admin.com / admin123');
+    console.log('- Catalog User: catalog@user.com / catalog123');
 }
 main()
     .then(async () => {
     await prisma.$disconnect();
 })
-    .catch(async (e) => {
-    console.error(e);
+    .catch(async (error) => {
+    console.error(error);
     await prisma.$disconnect();
     process.exit(1);
 });
