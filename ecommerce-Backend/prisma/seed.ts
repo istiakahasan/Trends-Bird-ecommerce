@@ -50,7 +50,7 @@ async function main() {
     await prisma.$executeRaw`SELECT setval('"Permission_id_seq"', (SELECT COALESCE(MAX(id), 0) + 1 FROM "Permission"), false);`;
     await prisma.$executeRaw`SELECT setval('"PermissionGroup_id_seq"', (SELECT COALESCE(MAX(id), 0) + 1 FROM "PermissionGroup"), false);`;
   } catch (e) {
-    // Ignore if not postgres or table doesn't exist
+    
   }
 
   // 2. Upsert all PermissionGroups and Permissions

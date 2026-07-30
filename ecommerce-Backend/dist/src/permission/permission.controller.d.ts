@@ -5,28 +5,28 @@ export declare class PermissionController {
     createGroup(body: any): Promise<{
         data: {
             permissions: {
-                name: string;
                 id: number;
+                name: string;
                 description: string | null;
                 groupId: number;
             }[];
         } & {
-            name: string;
             id: number;
+            name: string;
             description: string | null;
         };
     }>;
     getGroups(query: any): Promise<{
         data: ({
             permissions: {
-                name: string;
                 id: number;
+                name: string;
                 description: string | null;
                 groupId: number;
             }[];
         } & {
-            name: string;
             id: number;
+            name: string;
             description: string | null;
         })[];
         meta: {
@@ -39,14 +39,14 @@ export declare class PermissionController {
     updateGroup(id: number, body: any): Promise<{
         data: {
             permissions: {
-                name: string;
                 id: number;
+                name: string;
                 description: string | null;
                 groupId: number;
             }[];
         } & {
-            name: string;
             id: number;
+            name: string;
             description: string | null;
         };
     }>;

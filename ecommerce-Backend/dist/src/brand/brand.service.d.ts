@@ -4,10 +4,10 @@ export declare class BrandService {
     constructor(prisma: PrismaService);
     create(body: any): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         };
@@ -19,10 +19,10 @@ export declare class BrandService {
         limit?: string;
     }): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         }[];
@@ -35,20 +35,20 @@ export declare class BrandService {
     }>;
     findOne(id: number): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         };
     }>;
     update(id: number, body: any): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         };

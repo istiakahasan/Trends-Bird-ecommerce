@@ -5,14 +5,12 @@ export declare class UserController {
     findAll(query: any): Promise<{
         data: ({
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -21,6 +19,8 @@ export declare class UserController {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         })[];
         meta: {
             total: number;
@@ -32,14 +32,12 @@ export declare class UserController {
     findOne(id: number): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -48,19 +46,19 @@ export declare class UserController {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         };
     }>;
     create(body: any): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -69,19 +67,19 @@ export declare class UserController {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         };
     }>;
     update(id: number, body: any, req: any): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -90,6 +88,8 @@ export declare class UserController {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         };
     }>;
     remove(id: number): Promise<{

@@ -8,25 +8,25 @@ export declare class MediaController {
         data: ({
             uploadedBy: {
                 id: number;
-                email: string;
                 name: string;
+                email: string;
             };
         } & {
+            path: string;
+            url: string;
             id: number;
             createdAt: Date;
             updatedAt: Date;
+            type: string;
+            title: string | null;
+            altText: string | null;
             fileName: string;
             storedName: string;
-            path: string;
-            url: string;
             thumbnailUrl: string | null;
             mimeType: string;
-            type: string;
             size: number;
             width: number | null;
             height: number | null;
-            altText: string | null;
-            title: string | null;
             uploadedById: number;
         })[];
     }>;
@@ -34,25 +34,25 @@ export declare class MediaController {
         data: ({
             uploadedBy: {
                 id: number;
-                email: string;
                 name: string;
+                email: string;
             };
         } & {
+            path: string;
+            url: string;
             id: number;
             createdAt: Date;
             updatedAt: Date;
+            type: string;
+            title: string | null;
+            altText: string | null;
             fileName: string;
             storedName: string;
-            path: string;
-            url: string;
             thumbnailUrl: string | null;
             mimeType: string;
-            type: string;
             size: number;
             width: number | null;
             height: number | null;
-            altText: string | null;
-            title: string | null;
             uploadedById: number;
         })[];
     }>;
@@ -60,25 +60,25 @@ export declare class MediaController {
         data: ({
             uploadedBy: {
                 id: number;
-                email: string;
                 name: string;
+                email: string;
             };
         } & {
+            path: string;
+            url: string;
             id: number;
             createdAt: Date;
             updatedAt: Date;
+            type: string;
+            title: string | null;
+            altText: string | null;
             fileName: string;
             storedName: string;
-            path: string;
-            url: string;
             thumbnailUrl: string | null;
             mimeType: string;
-            type: string;
             size: number;
             width: number | null;
             height: number | null;
-            altText: string | null;
-            title: string | null;
             uploadedById: number;
         })[];
         meta: {
@@ -90,51 +90,51 @@ export declare class MediaController {
     }>;
     findOne(id: number): Promise<{
         data: {
-            uploadedBy: {
-                id: number;
-                email: string;
-                name: string;
-            };
             products: {
                 id: number;
                 name: string;
             }[];
+            uploadedBy: {
+                id: number;
+                name: string;
+                email: string;
+            };
         } & {
+            path: string;
+            url: string;
             id: number;
             createdAt: Date;
             updatedAt: Date;
+            type: string;
+            title: string | null;
+            altText: string | null;
             fileName: string;
             storedName: string;
-            path: string;
-            url: string;
             thumbnailUrl: string | null;
             mimeType: string;
-            type: string;
             size: number;
             width: number | null;
             height: number | null;
-            altText: string | null;
-            title: string | null;
             uploadedById: number;
         };
     }>;
     update(id: number, dto: UpdateMediaDto): Promise<{
         data: {
+            path: string;
+            url: string;
             id: number;
             createdAt: Date;
             updatedAt: Date;
+            type: string;
+            title: string | null;
+            altText: string | null;
             fileName: string;
             storedName: string;
-            path: string;
-            url: string;
             thumbnailUrl: string | null;
             mimeType: string;
-            type: string;
             size: number;
             width: number | null;
             height: number | null;
-            altText: string | null;
-            title: string | null;
             uploadedById: number;
         };
     }>;

@@ -5,14 +5,12 @@ export declare class UserService {
     create(body: any): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -21,6 +19,8 @@ export declare class UserService {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         };
     }>;
     findAll(query: {
@@ -32,14 +32,12 @@ export declare class UserService {
     }): Promise<{
         data: ({
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -48,6 +46,8 @@ export declare class UserService {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         })[];
         meta: {
             total: number;
@@ -59,14 +59,12 @@ export declare class UserService {
     findOne(id: number): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -75,19 +73,19 @@ export declare class UserService {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         };
     }>;
     update(id: number, currentUserId: number, body: any): Promise<{
         data: {
             role: {
-                name: string;
                 id: number;
+                name: string;
             };
         } & {
-            name: string | null;
             id: number;
-            createdAt: Date;
-            updatedAt: Date;
+            name: string | null;
             email: string;
             password: string;
             phone: string | null;
@@ -96,6 +94,8 @@ export declare class UserService {
             active: boolean;
             refreshToken: string | null;
             roleId: number;
+            createdAt: Date;
+            updatedAt: Date;
         };
     }>;
     remove(id: number): Promise<{

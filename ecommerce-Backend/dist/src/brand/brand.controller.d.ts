@@ -4,10 +4,10 @@ export declare class BrandController {
     constructor(brandService: BrandService);
     findAll(query: any): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         }[];
@@ -20,30 +20,30 @@ export declare class BrandController {
     }>;
     findOne(id: number): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         };
     }>;
     create(body: any): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         };
     }>;
     update(id: number, body: any): Promise<{
         data: {
-            name: string;
-            slug: string;
             id: number;
+            name: string;
             description: string | null;
+            slug: string;
             logo: string | null;
             status: boolean;
         };
