@@ -12,6 +12,9 @@ export declare class MediaController {
                 name: string;
             };
         } & {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -24,9 +27,6 @@ export declare class MediaController {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         })[];
     }>;
@@ -38,6 +38,9 @@ export declare class MediaController {
                 name: string;
             };
         } & {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -50,9 +53,6 @@ export declare class MediaController {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         })[];
     }>;
@@ -64,6 +64,9 @@ export declare class MediaController {
                 name: string;
             };
         } & {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -76,9 +79,6 @@ export declare class MediaController {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         })[];
         meta: {
@@ -100,6 +100,9 @@ export declare class MediaController {
                 name: string;
             }[];
         } & {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -112,14 +115,14 @@ export declare class MediaController {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         };
     }>;
     update(id: number, dto: UpdateMediaDto): Promise<{
         data: {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -132,9 +135,6 @@ export declare class MediaController {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         };
     }>;

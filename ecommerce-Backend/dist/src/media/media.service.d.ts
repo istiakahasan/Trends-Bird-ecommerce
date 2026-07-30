@@ -11,6 +11,9 @@ export declare class MediaService {
             name: string;
         };
     } & {
+        id: number;
+        createdAt: Date;
+        updatedAt: Date;
         fileName: string;
         storedName: string;
         path: string;
@@ -23,9 +26,6 @@ export declare class MediaService {
         height: number | null;
         altText: string | null;
         title: string | null;
-        createdAt: Date;
-        updatedAt: Date;
-        id: number;
         uploadedById: number;
     }>;
     uploadFiles(files: Express.Multer.File[], userId: number): Promise<{
@@ -36,6 +36,9 @@ export declare class MediaService {
                 name: string;
             };
         } & {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -48,9 +51,6 @@ export declare class MediaService {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         })[];
     }>;
@@ -62,6 +62,9 @@ export declare class MediaService {
                 name: string;
             };
         } & {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -74,9 +77,6 @@ export declare class MediaService {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         })[];
         meta: {
@@ -98,6 +98,9 @@ export declare class MediaService {
                 name: string;
             }[];
         } & {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -110,14 +113,14 @@ export declare class MediaService {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         };
     }>;
     update(id: number, dto: UpdateMediaDto): Promise<{
         data: {
+            id: number;
+            createdAt: Date;
+            updatedAt: Date;
             fileName: string;
             storedName: string;
             path: string;
@@ -130,9 +133,6 @@ export declare class MediaService {
             height: number | null;
             altText: string | null;
             title: string | null;
-            createdAt: Date;
-            updatedAt: Date;
-            id: number;
             uploadedById: number;
         };
     }>;

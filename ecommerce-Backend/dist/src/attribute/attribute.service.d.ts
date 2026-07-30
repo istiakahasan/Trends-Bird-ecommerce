@@ -9,17 +9,17 @@ export declare class AttributeService {
     create(dto: CreateAttributeDto): Promise<{
         data: {
             values: {
-                slug: string;
                 id: number;
+                slug: string;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            name: string;
-            slug: string;
-            type: string;
             id: number;
+            name: string;
+            type: string;
+            slug: string;
         };
     }>;
     findAll(query: {
@@ -30,17 +30,17 @@ export declare class AttributeService {
     }): Promise<{
         data: ({
             values: {
-                slug: string;
                 id: number;
+                slug: string;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            name: string;
-            slug: string;
-            type: string;
             id: number;
+            name: string;
+            type: string;
+            slug: string;
         })[];
         meta: {
             total: number;
@@ -52,33 +52,33 @@ export declare class AttributeService {
     findOne(id: number): Promise<{
         data: {
             values: {
-                slug: string;
                 id: number;
+                slug: string;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            name: string;
-            slug: string;
-            type: string;
             id: number;
+            name: string;
+            type: string;
+            slug: string;
         };
     }>;
     update(id: number, dto: UpdateAttributeDto): Promise<{
         data: {
             values: {
-                slug: string;
                 id: number;
+                slug: string;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            name: string;
-            slug: string;
-            type: string;
             id: number;
+            name: string;
+            type: string;
+            slug: string;
         };
     }>;
     remove(id: number): Promise<{
@@ -89,14 +89,14 @@ export declare class AttributeService {
     findValue(valueId: number): Promise<{
         data: {
             attribute: {
-                name: string;
-                slug: string;
-                type: string;
                 id: number;
+                name: string;
+                type: string;
+                slug: string;
             };
         } & {
-            slug: string;
             id: number;
+            slug: string;
             value: string;
             reference: string | null;
             attributeId: number;
@@ -104,8 +104,8 @@ export declare class AttributeService {
     }>;
     addValue(attributeId: number, dto: CreateAttributeValueDto): Promise<{
         data: {
-            slug: string;
             id: number;
+            slug: string;
             value: string;
             reference: string | null;
             attributeId: number;
@@ -113,8 +113,8 @@ export declare class AttributeService {
     }>;
     updateValue(valueId: number, dto: UpdateAttributeValueDto): Promise<{
         data: {
-            slug: string;
             id: number;
+            slug: string;
             value: string;
             reference: string | null;
             attributeId: number;
