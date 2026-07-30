@@ -4,6 +4,12 @@ A full-stack e-commerce platform designed with a scalable architecture, secure a
 
 ---
 
+# 🌐 Live Demo
+
+🔗 https://trends-bird-frontend-hx7n.onrender.com
+
+---
+
 ## 📚 Table of Contents
 
 - [Overview](#overview)
@@ -206,16 +212,7 @@ Frontend runs at:
 ```
 http://localhost:5173
 ```
----
 
-# 🌐 Live Demo
-
-The application is deployed and available online:
-
-🔗 **Frontend:**  
-https://trends-bird-frontend-hx7n.onrender.com
-
----
 ---
 
 # 👤 Seeded Account Credentials
@@ -285,7 +282,6 @@ Authorization: Bearer <access_token>
 
 ---
 
-
 # 🤝 Contributing
 
 Contributions are welcome!
@@ -320,4 +316,3 @@ git push origin feature/your-feature
 - GitHub: https://github.com/istiakahasan
 
 ---
-
