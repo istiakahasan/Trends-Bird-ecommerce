@@ -177,6 +177,7 @@ export type UserWhereInput = {
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>;
+    mediaUploads?: Prisma.MediaListRelationFilter;
 };
 export type UserOrderByWithRelationInput = {
     id?: Prisma.SortOrder;
@@ -192,6 +193,7 @@ export type UserOrderByWithRelationInput = {
     createdAt?: Prisma.SortOrder;
     updatedAt?: Prisma.SortOrder;
     role?: Prisma.RoleOrderByWithRelationInput;
+    mediaUploads?: Prisma.MediaOrderByRelationAggregateInput;
 };
 export type UserWhereUniqueInput = Prisma.AtLeast<{
     id?: number;
@@ -210,6 +212,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     role?: Prisma.XOR<Prisma.RoleScalarRelationFilter, Prisma.RoleWhereInput>;
+    mediaUploads?: Prisma.MediaListRelationFilter;
 }, "id" | "email">;
 export type UserOrderByWithAggregationInput = {
     id?: Prisma.SortOrder;
@@ -259,6 +262,7 @@ export type UserCreateInput = {
     createdAt?: Date | string;
     updatedAt?: Date | string;
     role: Prisma.RoleCreateNestedOneWithoutUsersInput;
+    mediaUploads?: Prisma.MediaCreateNestedManyWithoutUploadedByInput;
 };
 export type UserUncheckedCreateInput = {
     id?: number;
@@ -273,6 +277,7 @@ export type UserUncheckedCreateInput = {
     roleId: number;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    mediaUploads?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput;
 };
 export type UserUpdateInput = {
     email?: Prisma.StringFieldUpdateOperationsInput | string;
@@ -286,6 +291,7 @@ export type UserUpdateInput = {
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
+    mediaUploads?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput;
 };
 export type UserUncheckedUpdateInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -300,6 +306,7 @@ export type UserUncheckedUpdateInput = {
     roleId?: Prisma.IntFieldUpdateOperationsInput | number;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    mediaUploads?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput;
 };
 export type UserCreateManyInput = {
     id?: number;
@@ -399,6 +406,10 @@ export type UserSumOrderByAggregateInput = {
     id?: Prisma.SortOrder;
     roleId?: Prisma.SortOrder;
 };
+export type UserScalarRelationFilter = {
+    is?: Prisma.UserWhereInput;
+    isNot?: Prisma.UserWhereInput;
+};
 export type UserCreateNestedManyWithoutRoleInput = {
     create?: Prisma.XOR<Prisma.UserCreateWithoutRoleInput, Prisma.UserUncheckedCreateWithoutRoleInput> | Prisma.UserCreateWithoutRoleInput[] | Prisma.UserUncheckedCreateWithoutRoleInput[];
     connectOrCreate?: Prisma.UserCreateOrConnectWithoutRoleInput | Prisma.UserCreateOrConnectWithoutRoleInput[];
@@ -443,6 +454,18 @@ export type BoolFieldUpdateOperationsInput = {
 export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string;
 };
+export type UserCreateNestedOneWithoutMediaUploadsInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMediaUploadsInput, Prisma.UserUncheckedCreateWithoutMediaUploadsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMediaUploadsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+};
+export type UserUpdateOneRequiredWithoutMediaUploadsNestedInput = {
+    create?: Prisma.XOR<Prisma.UserCreateWithoutMediaUploadsInput, Prisma.UserUncheckedCreateWithoutMediaUploadsInput>;
+    connectOrCreate?: Prisma.UserCreateOrConnectWithoutMediaUploadsInput;
+    upsert?: Prisma.UserUpsertWithoutMediaUploadsInput;
+    connect?: Prisma.UserWhereUniqueInput;
+    update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMediaUploadsInput, Prisma.UserUpdateWithoutMediaUploadsInput>, Prisma.UserUncheckedUpdateWithoutMediaUploadsInput>;
+};
 export type UserCreateWithoutRoleInput = {
     email: string;
     password: string;
@@ -454,6 +477,7 @@ export type UserCreateWithoutRoleInput = {
     refreshToken?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    mediaUploads?: Prisma.MediaCreateNestedManyWithoutUploadedByInput;
 };
 export type UserUncheckedCreateWithoutRoleInput = {
     id?: number;
@@ -467,6 +491,7 @@ export type UserUncheckedCreateWithoutRoleInput = {
     refreshToken?: string | null;
     createdAt?: Date | string;
     updatedAt?: Date | string;
+    mediaUploads?: Prisma.MediaUncheckedCreateNestedManyWithoutUploadedByInput;
 };
 export type UserCreateOrConnectWithoutRoleInput = {
     where: Prisma.UserWhereUniqueInput;
@@ -506,6 +531,73 @@ export type UserScalarWhereInput = {
     createdAt?: Prisma.DateTimeFilter<"User"> | Date | string;
     updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string;
 };
+export type UserCreateWithoutMediaUploadsInput = {
+    email: string;
+    password: string;
+    name?: string | null;
+    phone?: string | null;
+    gender?: string | null;
+    avatar?: string | null;
+    active?: boolean;
+    refreshToken?: string | null;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    role: Prisma.RoleCreateNestedOneWithoutUsersInput;
+};
+export type UserUncheckedCreateWithoutMediaUploadsInput = {
+    id?: number;
+    email: string;
+    password: string;
+    name?: string | null;
+    phone?: string | null;
+    gender?: string | null;
+    avatar?: string | null;
+    active?: boolean;
+    refreshToken?: string | null;
+    roleId: number;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+};
+export type UserCreateOrConnectWithoutMediaUploadsInput = {
+    where: Prisma.UserWhereUniqueInput;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMediaUploadsInput, Prisma.UserUncheckedCreateWithoutMediaUploadsInput>;
+};
+export type UserUpsertWithoutMediaUploadsInput = {
+    update: Prisma.XOR<Prisma.UserUpdateWithoutMediaUploadsInput, Prisma.UserUncheckedUpdateWithoutMediaUploadsInput>;
+    create: Prisma.XOR<Prisma.UserCreateWithoutMediaUploadsInput, Prisma.UserUncheckedCreateWithoutMediaUploadsInput>;
+    where?: Prisma.UserWhereInput;
+};
+export type UserUpdateToOneWithWhereWithoutMediaUploadsInput = {
+    where?: Prisma.UserWhereInput;
+    data: Prisma.XOR<Prisma.UserUpdateWithoutMediaUploadsInput, Prisma.UserUncheckedUpdateWithoutMediaUploadsInput>;
+};
+export type UserUpdateWithoutMediaUploadsInput = {
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    password?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    role?: Prisma.RoleUpdateOneRequiredWithoutUsersNestedInput;
+};
+export type UserUncheckedUpdateWithoutMediaUploadsInput = {
+    id?: Prisma.IntFieldUpdateOperationsInput | number;
+    email?: Prisma.StringFieldUpdateOperationsInput | string;
+    password?: Prisma.StringFieldUpdateOperationsInput | string;
+    name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    active?: Prisma.BoolFieldUpdateOperationsInput | boolean;
+    refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
+    roleId?: Prisma.IntFieldUpdateOperationsInput | number;
+    createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
 export type UserCreateManyRoleInput = {
     id?: number;
     email: string;
@@ -530,6 +622,7 @@ export type UserUpdateWithoutRoleInput = {
     refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    mediaUploads?: Prisma.MediaUpdateManyWithoutUploadedByNestedInput;
 };
 export type UserUncheckedUpdateWithoutRoleInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -543,6 +636,7 @@ export type UserUncheckedUpdateWithoutRoleInput = {
     refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+    mediaUploads?: Prisma.MediaUncheckedUpdateManyWithoutUploadedByNestedInput;
 };
 export type UserUncheckedUpdateManyWithoutRoleInput = {
     id?: Prisma.IntFieldUpdateOperationsInput | number;
@@ -556,6 +650,18 @@ export type UserUncheckedUpdateManyWithoutRoleInput = {
     refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null;
     createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
     updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string;
+};
+export type UserCountOutputType = {
+    mediaUploads: number;
+};
+export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    mediaUploads?: boolean | UserCountOutputTypeCountMediaUploadsArgs;
+};
+export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null;
+};
+export type UserCountOutputTypeCountMediaUploadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    where?: Prisma.MediaWhereInput;
 };
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -571,6 +677,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
     createdAt?: boolean;
     updatedAt?: boolean;
     role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>;
+    mediaUploads?: boolean | Prisma.User$mediaUploadsArgs<ExtArgs>;
+    _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 }, ExtArgs["result"]["user"]>;
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
     id?: boolean;
@@ -619,6 +727,8 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "password" | "name" | "phone" | "gender" | "avatar" | "active" | "refreshToken" | "roleId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>;
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>;
+    mediaUploads?: boolean | Prisma.User$mediaUploadsArgs<ExtArgs>;
+    _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>;
 };
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     role?: boolean | Prisma.RoleDefaultArgs<ExtArgs>;
@@ -630,6 +740,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: "User";
     objects: {
         role: Prisma.$RolePayload<ExtArgs>;
+        mediaUploads: Prisma.$MediaPayload<ExtArgs>[];
     };
     scalars: runtime.Types.Extensions.GetPayloadResult<{
         id: number;
@@ -697,6 +808,7 @@ export interface UserDelegate<ExtArgs extends runtime.Types.Extensions.InternalA
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise";
     role<T extends Prisma.RoleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.RoleDefaultArgs<ExtArgs>>): Prisma.Prisma__RoleClient<runtime.Types.Result.GetResult<Prisma.$RolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>;
+    mediaUploads<T extends Prisma.User$mediaUploadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mediaUploadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>;
     then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): runtime.Types.Utils.JsPromise<TResult1 | TResult2>;
     catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): runtime.Types.Utils.JsPromise<T | TResult>;
     finally(onfinally?: (() => void) | undefined | null): runtime.Types.Utils.JsPromise<T>;
@@ -814,6 +926,17 @@ export type UserDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs
 export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     where?: Prisma.UserWhereInput;
     limit?: number;
+};
+export type User$mediaUploadsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+    select?: Prisma.MediaSelect<ExtArgs> | null;
+    omit?: Prisma.MediaOmit<ExtArgs> | null;
+    include?: Prisma.MediaInclude<ExtArgs> | null;
+    where?: Prisma.MediaWhereInput;
+    orderBy?: Prisma.MediaOrderByWithRelationInput | Prisma.MediaOrderByWithRelationInput[];
+    cursor?: Prisma.MediaWhereUniqueInput;
+    take?: number;
+    skip?: number;
+    distinct?: Prisma.MediaScalarFieldEnum | Prisma.MediaScalarFieldEnum[];
 };
 export type UserDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
     select?: Prisma.UserSelect<ExtArgs> | null;

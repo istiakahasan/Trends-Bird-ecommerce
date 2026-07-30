@@ -4,8 +4,12 @@ export declare class BrandService {
     constructor(prisma: PrismaService);
     create(body: any): Promise<{
         data: {
-            id: number;
             name: string;
+            slug: string;
+            id: number;
+            description: string | null;
+            logo: string | null;
+            status: boolean;
         };
     }>;
     findAll(query: {
@@ -15,8 +19,12 @@ export declare class BrandService {
         limit?: string;
     }): Promise<{
         data: {
-            id: number;
             name: string;
+            slug: string;
+            id: number;
+            description: string | null;
+            logo: string | null;
+            status: boolean;
         }[];
         meta: {
             total: number;
@@ -27,14 +35,22 @@ export declare class BrandService {
     }>;
     findOne(id: number): Promise<{
         data: {
-            id: number;
             name: string;
+            slug: string;
+            id: number;
+            description: string | null;
+            logo: string | null;
+            status: boolean;
         };
     }>;
     update(id: number, body: any): Promise<{
         data: {
-            id: number;
             name: string;
+            slug: string;
+            id: number;
+            description: string | null;
+            logo: string | null;
+            status: boolean;
         };
     }>;
     remove(id: number): Promise<{

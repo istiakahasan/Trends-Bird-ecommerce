@@ -10,14 +10,14 @@ export declare class PermissionService {
     }): Promise<{
         data: {
             permissions: {
-                id: number;
                 name: string;
+                id: number;
                 description: string | null;
                 groupId: number;
             }[];
         } & {
-            id: number;
             name: string;
+            id: number;
             description: string | null;
         };
     }>;
@@ -28,14 +28,14 @@ export declare class PermissionService {
     }): Promise<{
         data: ({
             permissions: {
-                id: number;
                 name: string;
+                id: number;
                 description: string | null;
                 groupId: number;
             }[];
         } & {
-            id: number;
             name: string;
+            id: number;
             description: string | null;
         })[];
         meta: {
@@ -51,14 +51,14 @@ export declare class PermissionService {
     }): Promise<{
         data: {
             permissions: {
-                id: number;
                 name: string;
+                id: number;
                 description: string | null;
                 groupId: number;
             }[];
         } & {
-            id: number;
             name: string;
+            id: number;
             description: string | null;
         };
     }>;

@@ -33,18 +33,22 @@ export const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const [products, users, media, categories] = await Promise.all([
-          api.get('/products?limit=1'),
-          api.get('/users?limit=1'),
-          api.get('/media?limit=1'),
-          api.get('/categories?limit=1'),
+        const safeGet = async (url: string) => {
+          try {
+            const res = await api.get(url);
+            return res.data?.meta?.total || res.data?.data?.total || 0;
+          } catch {
+            return 0;
+          }
+        };
+
+        const [totalProducts, totalUsers, totalMedia, totalCategories] = await Promise.all([
+          safeGet('/product?limit=1'),
+          safeGet('/user?limit=1'),
+          safeGet('/media?limit=1'),
+          safeGet('/category?limit=1'),
         ]);
-        setStats({
-          totalProducts: products.data.data.total || 0,
-          totalUsers: users.data.data.total || 0,
-          totalMedia: media.data.data.total || 0,
-          totalCategories: categories.data.data.total || 0,
-        });
+        setStats({ totalProducts, totalUsers, totalMedia, totalCategories });
       } catch (error) {
         console.error('Failed to fetch stats');
       } finally {

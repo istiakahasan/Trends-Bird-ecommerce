@@ -50,6 +50,7 @@ export const AttributeList = () => {
 
   useEffect(() => {
     fetchAttributes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.page, search, filters]);
 
   const handleDelete = async () => {

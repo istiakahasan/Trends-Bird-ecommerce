@@ -53,17 +53,31 @@ model User {
   refreshToken String?
   roleId       Int
   role         Role     @relation(fields: [roleId], references: [id])
+  mediaUploads Media[]
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 }
 
 // 5. Media
 model Media {
-  id        Int      @id @default(autoincrement())
-  url       String
-  type      String
-  products  Product[]
-  createdAt DateTime @default(now())
+  id           Int       @id @default(autoincrement())
+  fileName     String                        // original client filename
+  storedName   String    @unique             // UUID-based name on disk
+  path         String                        // absolute disk path
+  url          String                        // public URL served by static middleware
+  thumbnailUrl String?                       // public URL of the 300x300 WebP thumbnail
+  mimeType     String                        // e.g. image/jpeg — validated from magic bytes
+  type         String                        // "image" | "video" | "document"
+  size         Int                           // bytes
+  width        Int?                          // image dimensions only
+  height       Int?                          // image dimensions only
+  altText      String?
+  title        String?
+  uploadedById Int
+  uploadedBy   User      @relation(fields: [uploadedById], references: [id])
+  products     Product[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 // 6. Category
@@ -78,9 +92,13 @@ model Category {
 
 // 7. Brand
 model Brand {
-  id       Int       @id @default(autoincrement())
-  name     String    @unique
-  products Product[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  logo        String?
+  status      Boolean   @default(true)
+  products    Product[]
 }
 
 // 8. Attribute

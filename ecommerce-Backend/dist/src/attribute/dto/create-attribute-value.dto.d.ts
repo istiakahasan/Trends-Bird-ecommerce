@@ -1,0 +1,5 @@
+export declare class CreateAttributeValueDto {
+    value: string;
+    slug: string;
+    reference?: string;
+}

@@ -66,9 +66,21 @@ export declare const UserScalarFieldEnum: {
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum];
 export declare const MediaScalarFieldEnum: {
     readonly id: "id";
+    readonly fileName: "fileName";
+    readonly storedName: "storedName";
+    readonly path: "path";
     readonly url: "url";
+    readonly thumbnailUrl: "thumbnailUrl";
+    readonly mimeType: "mimeType";
     readonly type: "type";
+    readonly size: "size";
+    readonly width: "width";
+    readonly height: "height";
+    readonly altText: "altText";
+    readonly title: "title";
+    readonly uploadedById: "uploadedById";
     readonly createdAt: "createdAt";
+    readonly updatedAt: "updatedAt";
 };
 export type MediaScalarFieldEnum = (typeof MediaScalarFieldEnum)[keyof typeof MediaScalarFieldEnum];
 export declare const CategoryScalarFieldEnum: {
@@ -80,6 +92,10 @@ export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typ
 export declare const BrandScalarFieldEnum: {
     readonly id: "id";
     readonly name: "name";
+    readonly slug: "slug";
+    readonly description: "description";
+    readonly logo: "logo";
+    readonly status: "status";
 };
 export type BrandScalarFieldEnum = (typeof BrandScalarFieldEnum)[keyof typeof BrandScalarFieldEnum];
 export declare const AttributeScalarFieldEnum: {

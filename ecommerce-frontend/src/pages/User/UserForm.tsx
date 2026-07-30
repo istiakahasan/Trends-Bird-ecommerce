@@ -47,7 +47,7 @@ export const UserForm = () => {
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<{ id: string; name: string }[]>([]);
   const isEditing = !!id;
-  const isEditingSelf = isEditing && currentUser?.id === parseInt(id || '0', 10);
+  const isEditingSelf = isEditing && currentUser?.id === id;
 
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userSchema) as any,

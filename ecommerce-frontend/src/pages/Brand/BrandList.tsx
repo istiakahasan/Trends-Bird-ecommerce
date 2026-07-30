@@ -50,6 +50,7 @@ export const BrandList = () => {
 
   useEffect(() => {
     fetchBrands();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.page, search, filters]);
 
   const handleDelete = async () => {

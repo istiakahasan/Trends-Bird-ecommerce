@@ -8,6 +8,8 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MediaModule = void 0;
 const common_1 = require("@nestjs/common");
+const platform_express_1 = require("@nestjs/platform-express");
+const multer_1 = require("multer");
 const media_controller_1 = require("./media.controller");
 const media_service_1 = require("./media.service");
 let MediaModule = class MediaModule {
@@ -15,8 +17,14 @@ let MediaModule = class MediaModule {
 exports.MediaModule = MediaModule;
 exports.MediaModule = MediaModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            platform_express_1.MulterModule.register({
+                storage: (0, multer_1.memoryStorage)(),
+            }),
+        ],
         controllers: [media_controller_1.MediaController],
-        providers: [media_service_1.MediaService]
+        providers: [media_service_1.MediaService],
+        exports: [media_service_1.MediaService],
     })
 ], MediaModule);
 //# sourceMappingURL=media.module.js.map

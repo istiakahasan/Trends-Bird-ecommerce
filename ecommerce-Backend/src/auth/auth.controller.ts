@@ -24,14 +24,14 @@ export class AuthController {
 
   @Post('logout')
   async logout(@Req() req: any) {
-    return this.authService.logout(req.user.userId);
+    return this.authService.logout(req.user.sub);
   }
 
   @Get('me')
   async getMe(@Req() req: any) {
     // Re-verify the user in DB to get the latest active status and permissions
     const user = await this.prisma.user.findUnique({
-      where: { id: req.user.userId },
+      where: { id: req.user.sub },
       include: {
         role: {
           include: { permissions: true }

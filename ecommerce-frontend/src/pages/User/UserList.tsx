@@ -23,7 +23,6 @@ import {
 } from '../../components/ui/alert-dialog';
 
 export const UserList = () => {
-  const { hasPermission } = useAuth();
   const [users, setUsers] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +57,7 @@ export const UserList = () => {
 
   useEffect(() => {
     fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination.page, search, filters]);
 
   const handleDelete = async () => {

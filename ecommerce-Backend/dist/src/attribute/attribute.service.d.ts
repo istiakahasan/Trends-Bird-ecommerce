@@ -1,8 +1,12 @@
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateAttributeDto } from './dto/create-attribute.dto';
+import { UpdateAttributeDto } from './dto/update-attribute.dto';
+import { CreateAttributeValueDto } from './dto/create-attribute-value.dto';
+import { UpdateAttributeValueDto } from './dto/update-attribute-value.dto';
 export declare class AttributeService {
     private prisma;
     constructor(prisma: PrismaService);
-    create(body: any): Promise<{
+    create(dto: CreateAttributeDto): Promise<{
         data: {
             values: {
                 slug: string;
@@ -61,7 +65,7 @@ export declare class AttributeService {
             id: number;
         };
     }>;
-    update(id: number, body: any): Promise<{
+    update(id: number, dto: UpdateAttributeDto): Promise<{
         data: {
             values: {
                 slug: string;
@@ -82,7 +86,23 @@ export declare class AttributeService {
             success: boolean;
         };
     }>;
-    addValue(attributeId: number, body: any): Promise<{
+    findValue(valueId: number): Promise<{
+        data: {
+            attribute: {
+                name: string;
+                slug: string;
+                type: string;
+                id: number;
+            };
+        } & {
+            slug: string;
+            id: number;
+            value: string;
+            reference: string | null;
+            attributeId: number;
+        };
+    }>;
+    addValue(attributeId: number, dto: CreateAttributeValueDto): Promise<{
         data: {
             slug: string;
             id: number;
@@ -91,7 +111,7 @@ export declare class AttributeService {
             attributeId: number;
         };
     }>;
-    updateValue(valueId: number, body: any): Promise<{
+    updateValue(valueId: number, dto: UpdateAttributeValueDto): Promise<{
         data: {
             slug: string;
             id: number;

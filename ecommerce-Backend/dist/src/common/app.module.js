@@ -10,6 +10,8 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const config_1 = require("@nestjs/config");
+const serve_static_1 = require("@nestjs/serve-static");
+const path_1 = require("path");
 const auth_guard_1 = require("./guards/auth.guard");
 const permissions_guard_1 = require("./guards/permissions.guard");
 const http_exception_filter_1 = require("./filters/http-exception.filter");
@@ -33,6 +35,11 @@ exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
+            serve_static_1.ServeStaticModule.forRoot({
+                rootPath: (0, path_1.join)(process.cwd(), 'uploads'),
+                serveRoot: '/uploads',
+                serveStaticOptions: { index: false },
+            }),
             prisma_module_1.PrismaModule,
             auth_module_1.AuthModule,
             user_module_1.UserModule,

@@ -61,9 +61,21 @@ exports.UserScalarFieldEnum = {
 };
 exports.MediaScalarFieldEnum = {
     id: 'id',
+    fileName: 'fileName',
+    storedName: 'storedName',
+    path: 'path',
     url: 'url',
+    thumbnailUrl: 'thumbnailUrl',
+    mimeType: 'mimeType',
     type: 'type',
-    createdAt: 'createdAt'
+    size: 'size',
+    width: 'width',
+    height: 'height',
+    altText: 'altText',
+    title: 'title',
+    uploadedById: 'uploadedById',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
 };
 exports.CategoryScalarFieldEnum = {
     id: 'id',
@@ -72,7 +84,11 @@ exports.CategoryScalarFieldEnum = {
 };
 exports.BrandScalarFieldEnum = {
     id: 'id',
-    name: 'name'
+    name: 'name',
+    slug: 'slug',
+    description: 'description',
+    logo: 'logo',
+    status: 'status'
 };
 exports.AttributeScalarFieldEnum = {
     id: 'id',

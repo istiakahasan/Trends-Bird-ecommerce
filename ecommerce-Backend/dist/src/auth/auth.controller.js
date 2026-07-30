@@ -29,11 +29,11 @@ let AuthController = class AuthController {
         return this.authService.refresh(body);
     }
     async logout(req) {
-        return this.authService.logout(req.user.userId);
+        return this.authService.logout(req.user.sub);
     }
     async getMe(req) {
         const user = await this.prisma.user.findUnique({
-            where: { id: req.user.userId },
+            where: { id: req.user.sub },
             include: {
                 role: {
                     include: { permissions: true }

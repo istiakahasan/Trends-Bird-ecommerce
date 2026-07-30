@@ -1,21 +1,25 @@
 import { AttributeService } from './attribute.service';
+import { CreateAttributeDto } from './dto/create-attribute.dto';
+import { UpdateAttributeDto } from './dto/update-attribute.dto';
+import { CreateAttributeValueDto } from './dto/create-attribute-value.dto';
+import { UpdateAttributeValueDto } from './dto/update-attribute-value.dto';
 export declare class AttributeController {
     private readonly attributeService;
     constructor(attributeService: AttributeService);
     findAll(query: any): Promise<{
         data: ({
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
             slug: string;
             type: string;
+            id: number;
         })[];
         meta: {
             total: number;
@@ -27,49 +31,49 @@ export declare class AttributeController {
     findOne(id: number): Promise<{
         data: {
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
             slug: string;
             type: string;
+            id: number;
         };
     }>;
-    create(body: any): Promise<{
+    create(dto: CreateAttributeDto): Promise<{
         data: {
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
             slug: string;
             type: string;
+            id: number;
         };
     }>;
-    update(id: number, body: any): Promise<{
+    update(id: number, dto: UpdateAttributeDto): Promise<{
         data: {
             values: {
-                id: number;
                 slug: string;
+                id: number;
                 value: string;
                 reference: string | null;
                 attributeId: number;
             }[];
         } & {
-            id: number;
             name: string;
             slug: string;
             type: string;
+            id: number;
         };
     }>;
     remove(id: number): Promise<{
@@ -77,19 +81,35 @@ export declare class AttributeController {
             success: boolean;
         };
     }>;
-    addValue(id: number, body: any): Promise<{
+    findValue(valueId: number): Promise<{
         data: {
-            id: number;
+            attribute: {
+                name: string;
+                slug: string;
+                type: string;
+                id: number;
+            };
+        } & {
             slug: string;
+            id: number;
             value: string;
             reference: string | null;
             attributeId: number;
         };
     }>;
-    updateValue(valueId: number, body: any): Promise<{
+    addValue(id: number, dto: CreateAttributeValueDto): Promise<{
         data: {
-            id: number;
             slug: string;
+            id: number;
+            value: string;
+            reference: string | null;
+            attributeId: number;
+        };
+    }>;
+    updateValue(valueId: number, dto: UpdateAttributeValueDto): Promise<{
+        data: {
+            slug: string;
+            id: number;
             value: string;
             reference: string | null;
             attributeId: number;
