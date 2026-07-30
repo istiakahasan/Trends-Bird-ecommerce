@@ -213,9 +213,11 @@ http://localhost:5173
 
 > Update these credentials if your `seed.ts` uses different values.
 
+
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@admin.com | admin123 |
+| Catalog User | catalog@user.com | catalog123 |
 
 ---
 
