@@ -206,7 +206,16 @@ Frontend runs at:
 ```
 http://localhost:5173
 ```
+---
 
+# 🌐 Live Demo
+
+The application is deployed and available online:
+
+🔗 **Frontend:**  
+https://trends-bird-frontend-hx7n.onrender.com
+
+---
 ---
 
 # 👤 Seeded Account Credentials
