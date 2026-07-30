@@ -29,12 +29,15 @@ let AuthService = class AuthService {
                 }
             }
         });
-        if (!user || !user.active) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+        if (!user) {
+            throw new common_1.UnauthorizedException('User not found');
+        }
+        if (!user.active) {
+            throw new common_1.UnauthorizedException('User inactive');
         }
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
-            throw new common_1.UnauthorizedException('Invalid credentials');
+            throw new common_1.UnauthorizedException('Wrong password');
         }
         const payload = {
             sub: user.id,

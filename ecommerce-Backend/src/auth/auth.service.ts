@@ -21,14 +21,18 @@ export class AuthService {
       }
     });
 
-    if (!user || !user.active) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+   if (!user) {
+  throw new UnauthorizedException('User not found');
+}
+
+if (!user.active) {
+  throw new UnauthorizedException('User inactive');
+}
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Wrong password');
     }
 
     const payload = {
