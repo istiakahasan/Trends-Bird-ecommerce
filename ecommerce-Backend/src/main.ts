@@ -8,7 +8,13 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.setGlobalPrefix('api');
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://localhost:3000',
+      'https://trends-bird-frontend.onrender.com',
+    ],
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('E-Commerce API')

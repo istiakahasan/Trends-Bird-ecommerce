@@ -8,7 +8,13 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.useGlobalPipes(new common_1.ValidationPipe({ transform: true, whitelist: true }));
     app.setGlobalPrefix('api');
-    app.enableCors();
+    app.enableCors({
+        origin: [
+            'http://localhost:3000',
+            'https://trends-bird-frontend.onrender.com',
+        ],
+        credentials: true,
+    });
     const config = new swagger_1.DocumentBuilder()
         .setTitle('E-Commerce API')
         .setDescription('E-Commerce Backend API documentation')
