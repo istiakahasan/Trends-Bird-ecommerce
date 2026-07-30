@@ -11,7 +11,7 @@ async function bootstrap() {
     app.enableCors({
         origin: [
             'http://localhost:3000',
-            'https://trends-bird-frontend.onrender.com',
+            'https://trends-bird-frontend-hx7n.onrender.com',
         ],
         credentials: true,
     });
