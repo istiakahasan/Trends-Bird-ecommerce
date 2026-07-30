@@ -19,7 +19,6 @@ async function bootstrap() {
         .setTitle('E-Commerce API')
         .setDescription('E-Commerce Backend API documentation')
         .setVersion('1.0')
-        .addBearerAuth()
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
     swagger_1.SwaggerModule.setup('api/docs', app, document);
