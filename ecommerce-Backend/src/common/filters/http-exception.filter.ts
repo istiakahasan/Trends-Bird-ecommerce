@@ -30,7 +30,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         status = HttpStatus.BAD_REQUEST;
         message = 'Related record not found (foreign key constraint failed).';
       } else {
-        // Fallback for other prisma errors
         console.error('Prisma Error:', exception);
       }
     } else {

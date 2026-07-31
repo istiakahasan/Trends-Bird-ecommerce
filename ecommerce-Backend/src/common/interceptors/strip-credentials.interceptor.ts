@@ -15,12 +15,10 @@ export class StripCredentialsInterceptor implements NestInterceptor {
       return data;
     }
 
-    // If it's an array, recursively strip each item
     if (Array.isArray(data)) {
       return data.map(item => this.stripCredentials(item));
     }
 
-    // If it's an object, strip 'password' and 'refreshToken' and recurse
     if (typeof data === 'object' && !(data instanceof Date)) {
       const strippedData = { ...data };
       

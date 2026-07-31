@@ -91,7 +91,6 @@ export const PermissionList = () => {
         </table>
       </div>
 
-      {/* Pagination */}
       {pagination.total > pagination.limit && (
         <div className="flex justify-between items-center pt-4 border-t border-gray-50 text-sm">
           <button

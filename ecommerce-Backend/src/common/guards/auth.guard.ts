@@ -23,7 +23,6 @@ export class AuthGuard implements CanActivate {
       request['user'] = payload;
       return true;
     } catch (e) {
-      // Log the error for debugging purposes
       console.error('JWT verification failed:', e);
       throw new UnauthorizedException('Invalid or expired token');
     }

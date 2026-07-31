@@ -124,7 +124,6 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {statsCards.map((stat) => (
           <Card key={stat.title} className="hover:shadow-lg transition-shadow">
@@ -154,7 +153,6 @@ export const Dashboard = () => {
         ))}
       </div>
 
-      {/* Recent Activity */}
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>

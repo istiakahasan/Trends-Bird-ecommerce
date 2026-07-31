@@ -24,7 +24,6 @@ export class ProductController {
   @Permissions('product:delete')
   remove(@Param('id') id: string) {}
 
-  // Nested Route: Variants
   @Patch(':id/variants')
   @Permissions('product:update')
   updateVariants(@Param('id') id: string, @Body() body: any) {}

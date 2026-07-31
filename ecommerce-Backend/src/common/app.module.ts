@@ -10,11 +10,11 @@ import { GlobalExceptionFilter } from './filters/http-exception.filter';
 import { TransformInterceptor } from './interceptors/transform.interceptor';
 import { StripCredentialsInterceptor } from './interceptors/strip-credentials.interceptor';
 
-// Infrastructure & Auth Modules
+
 import { PrismaModule } from '../prisma/prisma.module';
 import { AuthModule } from '../auth/auth.module';
 
-// Feature Modules
+
 import { UserModule } from '../user/user.module';
 import { ProductModule } from '../product/product.module';
 import { BrandModule } from '../brand/brand.module';

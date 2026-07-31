@@ -38,10 +38,6 @@ const multerOptions = { storage: memoryStorage() };
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
-  // ─────────────────────────────────────────────────────────────
-  // Upload endpoints
-  // ─────────────────────────────────────────────────────────────
-
   @Post('upload')
   @Permissions('media:upload')
   @HttpCode(HttpStatus.CREATED)
@@ -84,10 +80,6 @@ export class MediaController {
   ) {
     return this.mediaService.uploadFiles(files, req.user.sub);
   }
-
-  // ─────────────────────────────────────────────────────────────
-  // CRUD endpoints
-  // ─────────────────────────────────────────────────────────────
 
   @Get()
   @Permissions('media:read')

@@ -15,7 +15,6 @@ export class PermissionService {
     }
     const groupName = this.normalizeName(body.name);
 
-    // Ensure the group does not already exist
     const existingGroup = await this.prisma.permissionGroup.findUnique({
       where: { name: groupName }
     });
@@ -23,10 +22,8 @@ export class PermissionService {
       throw new ConflictException(`Group '${groupName}' already exists`);
     }
 
-    // Normalise actions and generate permission names
     const permissionNames = body.actions.map(a => `${groupName}:${this.normalizeName(a)}`);
     
-    // Check if any of these permission names already exist globally
     const existingPerms = await this.prisma.permission.findMany({
       where: { name: { in: permissionNames } }
     });
@@ -96,7 +93,6 @@ export class PermissionService {
         };
       });
 
-      // Filter out those that already exist in this group to avoid unique constraint errors
       const existingNames = group.permissions.map(p => p.name);
       const newPerms = permsToCreate.filter(p => !existingNames.includes(p.name));
 
@@ -130,7 +126,6 @@ export class PermissionService {
   }
 
   async deleteGroup(id: number) {
-    // Will cascade delete permissions due to schema onDelete: Cascade
     await this.prisma.permissionGroup.delete({ where: { id } });
     return { data: { success: true } };
   }

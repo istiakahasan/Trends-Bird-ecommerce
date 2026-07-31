@@ -31,10 +31,6 @@ import { UpdateAttributeValueDto } from './dto/update-attribute-value.dto';
 export class AttributeController {
   constructor(private readonly attributeService: AttributeService) {}
 
-  // ─────────────────────────────────────────────────────────────
-  // Attribute endpoints
-  // ─────────────────────────────────────────────────────────────
-
   @Get()
   @Permissions('attribute:read')
   @ApiOperation({ summary: 'List all attributes (paginated, searchable, filterable by type)' })
@@ -80,11 +76,8 @@ export class AttributeController {
     return this.attributeService.remove(id);
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // Value endpoints
   // NOTE: static segments (/value) must come before dynamic (:id)
   // to avoid route collision in NestJS.
-  // ─────────────────────────────────────────────────────────────
 
   @Get('value/:valueId')
   @Permissions('attribute:read')

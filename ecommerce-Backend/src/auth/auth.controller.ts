@@ -29,7 +29,6 @@ export class AuthController {
 
   @Get('me')
   async getMe(@Req() req: any) {
-    // Re-verify the user in DB to get the latest active status and permissions
     const user = await this.prisma.user.findUnique({
       where: { id: req.user.sub },
       include: {

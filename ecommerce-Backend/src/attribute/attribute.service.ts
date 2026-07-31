@@ -14,12 +14,8 @@ import { UpdateAttributeValueDto } from './dto/update-attribute-value.dto';
 export class AttributeService {
   constructor(private prisma: PrismaService) {}
 
-  // ─────────────────────────────────────────────────────────────
-  // Attribute CRUD
-  // ─────────────────────────────────────────────────────────────
 
   async create(dto: CreateAttributeDto) {
-    // 1. Global uniqueness on name + slug
     const existing = await this.prisma.attribute.findFirst({
       where: { OR: [{ name: dto.name }, { slug: dto.slug }] },
     });
@@ -27,7 +23,6 @@ export class AttributeService {
       throw new ConflictException('An attribute with this name or slug already exists');
     }
 
-    // 2. If inline values are provided, enforce uniqueness within the batch itself
     if (dto.values && dto.values.length > 0) {
       const slugs = dto.values.map((v) => v.slug);
       const labels = dto.values.map((v) => v.value.toLowerCase());
@@ -111,11 +106,9 @@ export class AttributeService {
   }
 
   async update(id: number, dto: UpdateAttributeDto) {
-    // Confirm attribute exists
     const attribute = await this.prisma.attribute.findUnique({ where: { id } });
     if (!attribute) throw new NotFoundException('Attribute not found');
 
-    // Global uniqueness check for name / slug (excluding self)
     if (dto.name !== undefined || dto.slug !== undefined) {
       const conditions: any[] = [];
       if (dto.name !== undefined) conditions.push({ name: dto.name });
@@ -143,11 +136,9 @@ export class AttributeService {
   }
 
   async remove(id: number) {
-    // Confirm attribute exists first
     const attribute = await this.prisma.attribute.findUnique({ where: { id } });
     if (!attribute) throw new NotFoundException('Attribute not found');
 
-    // Guard: refuse if any value is used by a product variant
     const usedValue = await this.prisma.attributeValue.findFirst({
       where: { attributeId: id, variants: { some: {} } },
     });
@@ -161,10 +152,6 @@ export class AttributeService {
     return { data: { success: true } };
   }
 
-  // ─────────────────────────────────────────────────────────────
-  // Value management
-  // ─────────────────────────────────────────────────────────────
-
   async findValue(valueId: number) {
     const val = await this.prisma.attributeValue.findUnique({
       where: { id: valueId },
@@ -175,11 +162,9 @@ export class AttributeService {
   }
 
   async addValue(attributeId: number, dto: CreateAttributeValueDto) {
-    // Confirm parent attribute exists
     const attribute = await this.prisma.attribute.findUnique({ where: { id: attributeId } });
     if (!attribute) throw new NotFoundException('Attribute not found');
 
-    // Uniqueness: slug within this attribute (DB constraint backs this up)
     const slugConflict = await this.prisma.attributeValue.findUnique({
       where: { attributeId_slug: { attributeId, slug: dto.slug } },
     });
@@ -187,7 +172,6 @@ export class AttributeService {
       throw new ConflictException(`Slug "${dto.slug}" already exists in this attribute`);
     }
 
-    // Uniqueness: display label (case-insensitive) within this attribute
     const labelConflict = await this.prisma.attributeValue.findFirst({
       where: {
         attributeId,
@@ -216,7 +200,6 @@ export class AttributeService {
 
     const { attributeId } = valueRec;
 
-    // Uniqueness: slug (excluding self)
     if (dto.slug !== undefined && dto.slug !== valueRec.slug) {
       const slugConflict = await this.prisma.attributeValue.findUnique({
         where: { attributeId_slug: { attributeId, slug: dto.slug } },
@@ -226,7 +209,6 @@ export class AttributeService {
       }
     }
 
-    // Uniqueness: display label (case-insensitive, excluding self)
     if (dto.value !== undefined && dto.value.toLowerCase() !== valueRec.value.toLowerCase()) {
       const labelConflict = await this.prisma.attributeValue.findFirst({
         where: {

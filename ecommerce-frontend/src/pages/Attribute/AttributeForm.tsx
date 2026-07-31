@@ -40,7 +40,6 @@ export const AttributeForm = () => {
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState<any[]>([]);
   
-  // Value Management State
   const [valueForm, setValueForm] = useState({ value: '', slug: '', reference: '' });
   const [editingValueId, setEditingValueId] = useState<number | null>(null);
   const [valueLoading, setValueLoading] = useState(false);
@@ -229,7 +228,6 @@ export const AttributeForm = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               
-              {/* Value List */}
               {values.length > 0 ? (
                 <div className="border rounded-lg divide-y">
                   {values.map(val => (
@@ -266,7 +264,6 @@ export const AttributeForm = () => {
                 </div>
               )}
 
-              {/* Add / Edit Value Form */}
               <div className="bg-gray-50 p-4 rounded-lg border space-y-4">
                 <h4 className="font-semibold text-sm">{editingValueId ? 'Edit Value' : 'Add New Value'}</h4>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

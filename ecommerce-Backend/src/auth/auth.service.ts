@@ -42,11 +42,9 @@ if (!user.active) {
       permissions: user.role?.permissions.map(p => p.name) || [],
     };
     
-    // Issue short-lived access token and long-lived refresh token
     const accessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
     const refreshToken = this.jwtService.sign({ sub: user.id }, { expiresIn: '7d' });
     
-    // Hash refresh token for secure DB storage
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
     
     await this.prisma.user.update({
@@ -67,7 +65,6 @@ if (!user.active) {
     if (!refreshToken) throw new UnauthorizedException('No refresh token provided');
     
     try {
-      // Verify signature and expiration
       const decoded = this.jwtService.verify(refreshToken);
       const userId = decoded.sub;
       
@@ -84,7 +81,6 @@ if (!user.active) {
         throw new UnauthorizedException('Invalid credentials');
       }
       
-      // Verify against hashed token in database
       const isMatch = await bcrypt.compare(refreshToken, user.refreshToken);
       if (!isMatch) {
         throw new UnauthorizedException('Invalid credentials');
@@ -97,7 +93,6 @@ if (!user.active) {
         permissions: user.role?.permissions.map(p => p.name) || [],
       };
       
-      // Rotate both tokens
       const newAccessToken = this.jwtService.sign(payload, { expiresIn: '15m' });
       const newRefreshToken = this.jwtService.sign({ sub: user.id }, { expiresIn: '7d' });
       
@@ -121,7 +116,6 @@ if (!user.active) {
   }
 
   async logout(userId: number) {
-    // Revoke token server-side
     await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: null }

@@ -54,13 +54,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await api.post('/auth/logout');
     } catch {
-      // Ignore 404s if the backend doesn't have a logout endpoint yet
     } finally {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       setUser(null);
       
-      // We dynamically import toast here to avoid cyclic dependencies if any
       import('sonner').then(({ toast }) => {
         toast.success('Logged out successfully');
       });
